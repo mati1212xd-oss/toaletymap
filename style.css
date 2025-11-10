@@ -39,24 +39,28 @@ h1 {
     font-size: 1.2em;
 }
 
-/* Styl dla przycisku nawigacji w popupie */
-.nav-link {
+/* --- ZAKTUALIZOWANY STYL PRZYCISKU --- */
+
+/* Ustawiamy style dla wszystkich stanów linku, aby nic ich nie nadpisało */
+.nav-link,
+.nav-link:link,  /* Stan normalny */
+.nav-link:visited { /* Stan "odwiedzony" - to był prawdopodobnie problem */
     display: block; 
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 8px 12px;
     background-color: #0078FF; /* Niebieski kolor */
-    
-    /* --- ZMIANA JEST TUTAJ --- */
-    /* Dodajemy !important, aby mieć pewność, że tekst będzie biały */
-    color: #ffffff !important; 
-    
+    color: #ffffff !important; /* Wymuszony biały tekst */
     text-decoration: none;
     border-radius: 5px;
-    font-weight: bold;
+    font-weight: bold; /* Pogrubienie tekstu dla lepszej widoczności */
     text-align: center;
     transition: background-color 0.2s;
 }
-.nav-link:hover {
-    background-color: #0056b3; 
+
+/* Stan po najechaniu myszką lub aktywacji */
+.nav-link:hover,
+.nav-link:active {
+    background-color: #0056b3; /* Ciemniejszy niebieski */
+    color: #ffffff !important; /* Również wymuszony biały tekst */
 }
