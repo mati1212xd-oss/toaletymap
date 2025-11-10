@@ -12,78 +12,67 @@ let allMarkers = []; // Przechowamy tu wszystkie pinezki (dla filtrów)
 let userCurrentLocation = null; // Przechowamy tu lokalizację użytkownika (dla "znajdź najbliższą")
 
 
-// === BAZA DANYCH TOALET (z nowymi polami: dostepnosc, przewijak) ===
-// !!! ZWERYFIKUJ PONIŻSZE DANE (dostepnosc, przewijak) - ZGADYWAŁEM !!!
+// === BAZA DANYCH TOALET (uproszczona) ===
 const toalety = [
     {
         lat: 52.2078559642937, lng: 20.985786707695123,
         nazwa: 'UCS - parter lewe skrzydło',
         opis: 'Dużo toalet 1-osobowych nowoczesnych. Na ostatnim piętrze duże toalety wieloosobowe.',
-        zdjecie: 'images/UCS1.jpg', ocena: 4,
-        dostepnosc: true, przewijak: true // ZGADNIĘTE: "nowoczesne"
+        zdjecie: 'images/UCS1.jpg', ocena: 4
     },
     {
         lat: 52.20820427646147, lng: 20.979830088093806,
         nazwa: 'CSM',
         opis: 'Duże toalety w szatniach w podziemiach, brak ludzi i brak zasięgu. Na 2 piętrze też spoko.',
-        zdjecie: 'images/CSM.jpg', ocena: 4,
-        dostepnosc: false, przewijak: false // ZGADNIĘTE: "podziemia"
+        zdjecie: 'images/CSM.jpg', ocena: 4
     },
     {
         lat: 52.205868532657604, lng: 20.981562853951694,
         nazwa: 'CSR',
         opis: 'Fajne toalety, dużo ich na każdym piętrze, mało ludzi, ale otwarte.',
-        zdjecie: 'images/placeholder.jpg', ocena: 5,
-        dostepnosc: true, przewijak: false // ZGADNIĘTE
+        zdjecie: 'images/placeholder.jpg', ocena: 5
     },
     {
         lat: 52.20594085661789, lng: 20.984465004146944,
         nazwa: 'CD',
         opis: 'Jedna na lewo od wejścia, druga na -1 przy windach. Słabe, dużo ludzi.',
-        zdjecie: 'images/placeholder.jpg', ocena: 1,
-        dostepnosc: true, przewijak: false // ZGADNIĘTE: "przy windach"
+        zdjecie: 'images/placeholder.jpg', ocena: 1
     },
     {
         lat: 52.20774234274788, lng: 20.980468512641032,
         nazwa: 'Zakład Patomorfologii',
         opis: 'Dobra toaleta na 3 piętrze.',
-        zdjecie: 'images/placeholder.jpg', ocena: 3,
-        dostepnosc: true, przewijak: false // ZGADNIĘTE: "3 piętro" (z windą?)
+        zdjecie: 'images/placeholder.jpg', ocena: 3
     },
     {
         lat: 52.209846175718916, lng: 20.986074329551887,
         nazwa: 'Farmacja',
         opis: 'Słabe, średniowieczne toalety w piwnicach.',
-        zdjecie: 'images/placeholder.jpg', ocena: 2,
-        dostepnosc: false, przewijak: false // ZGADNIĘTE: "piwnice"
+        zdjecie: 'images/placeholder.jpg', ocena: 2
     },
     {
         lat: 52.22506344729113, lng: 20.9983348485012,
         nazwa: 'Okulistyka',
         opis: 'Totalny PRL... Jednoosobowe...',
-        zdjecie: 'images/Okulistyka.jpg', ocena: 3,
-        dostepnosc: false, przewijak: false // ZGADNIĘTE: "PRL"
+        zdjecie: 'images/Okulistyka.jpg', ocena: 3
     },
     {
         lat: 52.23423239446239, lng: 20.972576939699074,
         nazwa: 'Szpital Wolska',
         opis: 'Bardzo fajne toalety na 1 piętrze... Fajna toaleta na prawo za szatnią...',
-        zdjecie: 'images/placeholder.jpg', ocena: 5,
-        dostepnosc: true, przewijak: true // ZGADNIĘTE: "szpital", "fajne"
+        zdjecie: 'images/placeholder.jpg', ocena: 5
     },
     {
         lat: 52.21707823174565, lng: 21.02041209833766,
         nazwa: 'Kampus Litewska',
         opis: 'Dobre, nowoczesne toalety na każdym piętrze, dosyć mało ludzi.',
-        zdjecie: 'images/placeholder.jpg', ocena: 4,
-        dostepnosc: true, przewijak: true // ZGADNIĘTE: "nowoczesne"
+        zdjecie: 'images/placeholder.jpg', ocena: 4
     },
     {
         lat: 52.22509853510605, lng: 21.003075108792096,
         nazwa: 'Collegium Anatomicum',
         opis: 'Duża, bardzo duży ruch, dużo ludzi, nieprzyjemna.',
-        zdjecie: 'images/anatomicum.jpg', ocena: 1,
-        dostepnosc: true, przewijak: false // ZGADNIĘTE: "duża"
+        zdjecie: 'images/anatomicum.jpg', ocena: 1
     }
 ];
 
@@ -98,7 +87,7 @@ function stworzGwiazdki(ocena) {
     return gwiazdki;
 }
 
-// --- Opcja 1: Funkcja zwracająca kolorową ikonę ---
+// --- Funkcja zwracająca kolorową ikonę ---
 function getIcon(ocena) {
     let iconColor;
     if (ocena >= 5) {
@@ -110,7 +99,7 @@ function getIcon(ocena) {
     }
 
     return L.AwesomeMarkers.icon({
-        icon: 'wheelchair', // Możesz zmienić ikonę na 'fa-male', 'fa-female' itp. z Font Awesome
+        icon: 'map-marker', // Zmieniona ikona na ogólną
         markerColor: iconColor,
         prefix: 'fa'
     });
@@ -133,7 +122,7 @@ toalety.forEach(toaleta => {
         </div>
     `;
 
-    // 2. Stwórz marker z kolorową ikoną (Opcja 1)
+    // 2. Stwórz marker z kolorową ikoną
     const marker = L.marker([toaleta.lat, toaleta.lng], {
         icon: getIcon(toaleta.ocena) 
     })
@@ -150,26 +139,18 @@ toalety.forEach(toaleta => {
 
 // === LOGIKA DLA NOWYCH FUNKCJI ===
 
-// --- Opcja 2: Logika filtrowania ---
+// --- Logika filtrowania (Uproszczona) ---
 const filterCheckboxes = document.querySelectorAll('.filter-check');
 
 function updateFilters() {
     const filter5star = document.getElementById('filter-5star').checked;
-    const filterAccessible = document.getElementById('filter-accessible').checked;
-    const filterBaby = document.getElementById('filter-baby').checked;
 
     allMarkers.forEach(marker => {
         const data = marker.toaletaData;
         let show = true; // Domyślnie pokaż
 
-        // Sprawdź każdy filtr
+        // Sprawdź filtr 5 gwiazdek
         if (filter5star && data.ocena < 5) {
-            show = false;
-        }
-        if (filterAccessible && !data.dostepnosc) {
-            show = false;
-        }
-        if (filterBaby && !data.przewijak) {
             show = false;
         }
 
@@ -188,7 +169,7 @@ filterCheckboxes.forEach(checkbox => {
 });
 
 
-// --- Opcja 3: Logika przycisku "Znajdź najbliższą" ---
+// --- Logika przycisku "Znajdź najbliższą" ---
 document.getElementById('find-nearest').addEventListener('click', () => {
     if (!userCurrentLocation) {
         alert("Nie można znaleźć Twojej lokalizacji. Upewnij się, że zezwoliłeś na dostęp.");
@@ -198,9 +179,8 @@ document.getElementById('find-nearest').addEventListener('click', () => {
     let closestMarker = null;
     let minDistance = Infinity;
 
-    // Pętla po wszystkich markerach, które są AKTUALNIE NA MAPIE (po filtrowaniu)
     allMarkers.forEach(marker => {
-        if (map.hasLayer(marker)) { // Sprawdź tylko widoczne markery
+        if (map.hasLayer(marker)) { 
             const distance = userCurrentLocation.distanceTo(marker.getLatLng());
             
             if (distance < minDistance) {
@@ -219,13 +199,13 @@ document.getElementById('find-nearest').addEventListener('click', () => {
 });
 
 
-// --- SEKCJA LOKALIZACJI UŻYTKOWNIKA (Zaktualizowana) ---
+// --- SEKCJA LOKALIZACJI UŻYTKOWNIKA ---
 let userLocationMarker = null;
 let userAccuracyCircle = null;
 
 function onLocationFound(e) {
     const radius = e.accuracy; 
-    userCurrentLocation = e.latlng; // <-- ZAPISUJEMY LOKALIZACJĘ GLOBALNIE
+    userCurrentLocation = e.latlng; 
 
     const locationMarkerStyle = {
         color: '#0078FF', fillColor: '#0078FF', fillOpacity: 0.8, radius: 8, weight: 2
