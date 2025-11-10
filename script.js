@@ -108,11 +108,8 @@ function stworzGwiazdki(ocena) {
 // --- Dodawanie Pinezek (Markerów) na Mapę ---
 toalety.forEach(toaleta => {
 
-    // Poprawny link do nawigacji Google Maps
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
 
-    // --- ZMIANA W TEJ SEKCJI ---
-    // Tworzymy treść okienka popup w HTML
     const popupHTML = `
         <div class="popup-content">
             <h3>${toaleta.nazwa}</h3>
@@ -129,8 +126,69 @@ toalety.forEach(toaleta => {
         </div>
     `;
 
-    // Tworzymy pinezkę (marker) i dodajemy ją do mapy
     L.marker([toaleta.lat, toaleta.lng])
         .addTo(map)
-        .bindPopup(popupHTML); // Dodajemy okienko popup do pinezki
+        .bindPopup(popupHTML);
 });
+
+
+// -----------------------------------------------------------------
+// --- 📍 NOWA SEKCJA: LOKALIZACJA UŻYTKOWNIKA ---
+// -----------------------------------------------------------------
+
+// Zmienne do przechowywania kropki i okręgu dokładności
+let userLocationMarker = null;
+let userAccuracyCircle = null;
+
+// Funkcja wywoływana, gdy lokalizacja zostanie znaleziona
+function onLocationFound(e) {
+    const radius = e.accuracy; // Dokładność w metrach
+
+    // Style dla naszej kropki i okręgu
+    const locationMarkerStyle = {
+        color: '#0078FF',
+        fillColor: '#0078FF',
+        fillOpacity: 0.8, // Bardziej widoczna kropka
+        radius: 8, // Rozmiar kropki
+        weight: 2 // Obwódka
+    };
+    const accuracyCircleStyle = {
+        color: '#0078FF',
+        fillColor: '#0078FF',
+        fillOpacity: 0.15, // Lekko przezroczysty okrąg
+        weight: 1,
+        interactive: false // Nie da się kliknąć okręgu
+    };
+
+    if (!userLocationMarker) {
+        // Jeśli to pierwsze znalezienie lokalizacji:
+        // 1. Stwórz kropkę (używamy circleMarker, bo to kropka, a nie pinezka)
+        userLocationMarker = L.circleMarker(e.latlng, locationMarkerStyle).addTo(map)
+            .bindPopup("Jesteś tutaj").openPopup();
+        
+        // 2. Stwórz okrąg dokładności
+        userAccuracyCircle = L.circle(e.latlng, radius, accuracyCircleStyle).addTo(map);
+        
+        // 3. Ustaw widok mapy na lokalizację użytkownika
+        map.setView(e.latlng, 17); // Ustawia zoom na 17
+    } else {
+        // Jeśli to aktualizacja (bo `watch: true`):
+        // 1. Przesuń kropkę
+        userLocationMarker.setLatLng(e.latlng);
+        // 2. Przesuń i zmień rozmiar okręgu
+        userAccuracyCircle.setLatLng(e.latlng).setRadius(radius);
+    }
+}
+
+// Funkcja wywoływana, gdy wystąpi błąd (np. użytkownik nie pozwoli)
+function onLocationError(e) {
+    alert("Nie można pobrać lokalizacji. \nUpewnij się, że zezwoliłeś na dostęp w przeglądarce i masz włączony GPS.");
+}
+
+// Podpięcie funkcji do eventów mapy
+map.on('locationfound', onLocationFound);
+map.on('locationerror', onLocationError);
+
+// Uruchomienie śledzenia lokalizacji
+// `watch: true` oznacza śledzenie na żywo (kropka będzie się przesuwać)
+map.locate({ watch: true, setView: false, maxZoom: 17 });
