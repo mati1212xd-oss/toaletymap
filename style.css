@@ -39,28 +39,28 @@ h1 {
     font-size: 1.2em;
 }
 
-/* --- ZAKTUALIZOWANY STYL PRZYCISKU --- */
+/* --- OSTATECZNIE ZAKTUALIZOWANY STYL PRZYCISKU --- */
 
-/* Ustawiamy style dla wszystkich stanów linku, aby nic ich nie nadpisało */
+/* Ustawiamy style dla WSZYSTKICH możliwych stanów linku */
 .nav-link,
-.nav-link:link,  /* Stan normalny */
-.nav-link:visited { /* Stan "odwiedzony" - to był prawdopodobnie problem */
+.nav-link:link,
+.nav-link:visited,
+.nav-link:hover,
+.nav-link:active {
     display: block; 
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 8px 12px;
     background-color: #0078FF; /* Niebieski kolor */
-    color: #ffffff !important; /* Wymuszony biały tekst */
-    text-decoration: none;
+    color: #ffffff !important; /* Wymuszony biały tekst, dla WSZYSTKICH stanów */
+    text-decoration: none; /* Usuwa podkreślenie */
+    font-weight: 700 !important; /* Jeszcze mocniejsze pogrubienie, 700 to "bold" */
     border-radius: 5px;
-    font-weight: bold; /* Pogrubienie tekstu dla lepszej widoczności */
     text-align: center;
     transition: background-color 0.2s;
 }
 
-/* Stan po najechaniu myszką lub aktywacji */
-.nav-link:hover,
-.nav-link:active {
-    background-color: #0056b3; /* Ciemniejszy niebieski */
-    color: #ffffff !important; /* Również wymuszony biały tekst */
+/* Stan po najechaniu myszką (tylko tło się zmienia) */
+.nav-link:hover {
+    background-color: #0056b3; /* Ciemniejszy niebieski po najechaniu */
 }
