@@ -39,7 +39,7 @@ const toalety = [
         lng: 20.984465004146944,
         nazwa: 'CD',
         opis: 'Jedna na lewo od wejścia, druga na -1 przy windach. Słabe, dużo ludzi.',
-        zdjecie: 'images/placeholder.jpg', // Poprawiłem literówkę z .js na .jpg
+        zdjecie: 'images/placeholder.jpg', 
         ocena: 1
     },
     {
@@ -108,10 +108,10 @@ function stworzGwiazdki(ocena) {
 // --- Dodawanie Pinezek (Markerów) na Mapę ---
 toalety.forEach(toaleta => {
 
-    // --- POPRAWIONY LINK GOOGLE MAPS JEST TUTAJ ---
-    // Ten link poprawnie otworzy nawigację "directions to"
+    // Poprawny link do nawigacji Google Maps
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
 
+    // --- ZMIANA W TEJ SEKCJI ---
     // Tworzymy treść okienka popup w HTML
     const popupHTML = `
         <div class="popup-content">
@@ -124,7 +124,7 @@ toalety.forEach(toaleta => {
             </a>
 
             <div class="star-rating" title="Ocena: ${toaleta.ocena}/5">
-                ${stworzGwiazdki(toaleta.ocena)}
+                ${stworzGwiazdki(toaleta.ocena)} (${toaleta.ocena}/5)
             </div>
         </div>
     `;
