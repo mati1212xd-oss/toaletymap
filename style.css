@@ -39,28 +39,29 @@ h1 {
     font-size: 1.2em;
 }
 
-/* --- OSTATECZNIE ZAKTUALIZOWANY STYL PRZYCISKU --- */
+/* --- NAJWAŻNIEJSZA POPRAWKA STYLU PRZYCISKU --- */
 
-/* Ustawiamy style dla WSZYSTKICH możliwych stanów linku */
-.nav-link,
-.nav-link:link,
-.nav-link:visited,
-.nav-link:hover,
-.nav-link:active {
+/* Używamy ".leaflet-popup-content .nav-link", aby nasz styl
+   był ważniejszy niż domyślny styl linków w Leaflet.
+*/
+.leaflet-popup-content .nav-link,
+.leaflet-popup-content .nav-link:link,
+.leaflet-popup-content .nav-link:visited {
     display: block; 
     margin-top: 10px;
     margin-bottom: 10px;
-    padding: 8px 12px;
+    padding: 10px; /* Lekko powiększyłem przycisk */
     background-color: #0078FF; /* Niebieski kolor */
-    color: #ffffff !important; /* Wymuszony biały tekst, dla WSZYSTKICH stanów */
-    text-decoration: none; /* Usuwa podkreślenie */
-    font-weight: 700 !important; /* Jeszcze mocniejsze pogrubienie, 700 to "bold" */
+    color: #ffffff !important; /* Wymuszony biały tekst */
+    text-decoration: none !important; /* Wymuszony brak podkreślenia */
+    font-weight: 700 !important; /* Wymuszone pogrubienie */
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.2s;
 }
 
-/* Stan po najechaniu myszką (tylko tło się zmienia) */
-.nav-link:hover {
-    background-color: #0056b3; /* Ciemniejszy niebieski po najechaniu */
+/* Stan po najechaniu myszką */
+.leaflet-popup-content .nav-link:hover {
+    background-color: #0056b3; /* Ciemniejszy niebieski */
+    color: #ffffff !important; /* Tekst nadal biały */
 }
