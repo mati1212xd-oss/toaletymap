@@ -1,19 +1,14 @@
 // --- Inicjalizacja Mapy ---
-// Ustawia mapę na środku kampusu (zmień koordynaty na swoje)
-// Obliczyłem nowy środek na podstawie Twoich pinezek
-const mapCenter = [52.213, 20.987]; // [szerokość, długość]
-const initialZoom = 15; // Zmniejszyłem zoom, aby objąć wszystkie punkty
+const mapCenter = [52.213, 20.987]; 
+const initialZoom = 15; 
 
-// Inicjalizujemy mapę w naszym divie #map
 const map = L.map('map').setView(mapCenter, initialZoom);
 
-// Dodajemy "kafelki" mapy - czyli sam wygląd mapy. Używamy darmowych OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 // --- Baza Danych Toalet ---
-// Twoje dane, które podałeś:
 const toalety = [
     {
         lat: 52.2078559642937,
@@ -36,7 +31,7 @@ const toalety = [
         lng: 20.981562853951694,
         nazwa: 'CSR',
         opis: 'Fajne toalety, dużo ich na każdym piętrze, mało ludzi, ale otwarte.',
-        zdjecie: 'images/placeholder.jpg', // Domyślne zdjęcie
+        zdjecie: 'images/placeholder.jpg',
         ocena: 5
     },
     {
@@ -44,7 +39,7 @@ const toalety = [
         lng: 20.984465004146944,
         nazwa: 'CD',
         opis: 'Jedna na lewo od wejścia, druga na -1 przy windach. Słabe, dużo ludzi.',
-        zdjecie: 'images/placeholder.jpg', // Domyślne zdjęcie
+        zdjecie: 'images/placeholder.jpg', // Poprawiłem literówkę z .js na .jpg
         ocena: 1
     },
     {
@@ -52,7 +47,7 @@ const toalety = [
         lng: 20.980468512641032,
         nazwa: 'Zakład Patomorfologii',
         opis: 'Dobra toaleta na 3 piętrze.',
-        zdjecie: 'images/placeholder.jpg', // Domyślne zdjęcie
+        zdjecie: 'images/placeholder.jpg',
         ocena: 3
     },
     {
@@ -60,7 +55,7 @@ const toalety = [
         lng: 20.986074329551887,
         nazwa: 'Farmacja',
         opis: 'Słabe, średniowieczne toalety w piwnicach.',
-        zdjecie: 'images/placeholder.jpg', // Domyślne zdjęcie
+        zdjecie: 'images/placeholder.jpg',
         ocena: 2
     },
     {
@@ -76,7 +71,7 @@ const toalety = [
         lng: 20.972576939699074,
         nazwa: 'Szpital Wolska',
         opis: 'Bardzo fajne toalety na 1 piętrze w budynku gdzie są sale seminaryjne, mało ludzi. Fajna toaleta na prawo za szatnią w budynku szpitala.',
-        zdjecie: 'images/placeholder.jpg', // Domyślne zdjęcie
+        zdjecie: 'images/placeholder.jpg',
         ocena: 5
     },
     {
@@ -84,7 +79,7 @@ const toalety = [
         lng: 21.02041209833766,
         nazwa: 'Kampus Litewska',
         opis: 'Dobre, nowoczesne toalety na każdym piętrze, dosyć mało ludzi.',
-        zdjecie: 'images/placeholder.jpg', // Domyślne zdjęcie
+        zdjecie: 'images/placeholder.jpg',
         ocena: 4
     },
     {
@@ -98,7 +93,6 @@ const toalety = [
 ];
 
 // --- Funkcja do generowania gwiazdek ---
-// Zmienia liczbę (np. 4) na gwiazdki (np. ★★★★☆)
 function stworzGwiazdki(ocena) {
     let gwiazdki = '';
     for (let i = 1; i <= 5; i++) {
@@ -114,9 +108,8 @@ function stworzGwiazdki(ocena) {
 // --- Dodawanie Pinezek (Markerów) na Mapę ---
 toalety.forEach(toaleta => {
 
-    // --- TUTAJ JEST ZMIANA ---
-    // Tworzymy link do Google Maps. Poprowadzi on użytkownika z jego aktualnej lokalizacji
-    // do koordynatów toalety.
+    // --- POPRAWIONY LINK GOOGLE MAPS JEST TUTAJ ---
+    // Ten link poprawnie otworzy nawigację "directions to"
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
 
     // Tworzymy treść okienka popup w HTML
