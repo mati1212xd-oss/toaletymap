@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Kluczowe: Mapa musi mieć określoną wysokość */
+#map {
+    height: 70vh; /* 70% wysokości okna przeglądarki */
+    width: 90%;
+    margin: 20px auto; /* Wyśrodkowanie mapy */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Style dla okienka popup */
+.popup-content {
+    font-size: 14px;
+}
+.popup-content h3 {
+    margin: 0 0 10px 0;
+}
+.popup-content img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Prosty system gwiazdek */
+.star-rating {
+    color: #f5c518; /* Złoty kolor gwiazdek */
+    font-size: 1.2em;
+}
