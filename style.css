@@ -39,3 +39,23 @@ h1 {
     color: #f5c518; /* Złoty kolor gwiazdek */
     font-size: 1.2em;
 }
+
+/* --- NOWY FRAGMENT DODANY NA KOŃCU --- */
+
+/* Styl dla przycisku nawigacji w popupie */
+.nav-link {
+    display: block; /* Sprawia, że link zajmuje całą szerokość */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background-color: #0078FF; /* Niebieski kolor */
+    color: #ffffff; /* Biały tekst */
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+.nav-link:hover {
+    background-color: #0056b3; /* Ciemniejszy niebieski po najechaniu */
+}
