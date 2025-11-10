@@ -88,7 +88,6 @@ const toalety = [
         ocena: 4
     },
     {
-        // --- NOWY WPIS DODANY TUTAJ ---
         lat: 52.22509853510605,
         lng: 21.003075108792096,
         nazwa: 'Collegium Anatomicum',
@@ -114,12 +113,23 @@ function stworzGwiazdki(ocena) {
 
 // --- Dodawanie Pinezek (Markerów) na Mapę ---
 toalety.forEach(toaleta => {
+
+    // --- TUTAJ JEST ZMIANA ---
+    // Tworzymy link do Google Maps. Poprowadzi on użytkownika z jego aktualnej lokalizacji
+    // do koordynatów toalety.
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
+
     // Tworzymy treść okienka popup w HTML
     const popupHTML = `
         <div class="popup-content">
             <h3>${toaleta.nazwa}</h3>
             <img src="${toaleta.zdjecie}" alt="Zdjęcie toalety: ${toaleta.nazwa}">
             <p>${toaleta.opis}</p>
+            
+            <a href="${googleMapsUrl}" target="_blank" class="nav-link">
+                Nawiguj do toalety
+            </a>
+
             <div class="star-rating" title="Ocena: ${toaleta.ocena}/5">
                 ${stworzGwiazdki(toaleta.ocena)}
             </div>
