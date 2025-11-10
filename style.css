@@ -1,3 +1,4 @@
+/* Stare style */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -11,14 +12,13 @@ h1 {
 }
 
 #map {
-    height: 70vh; /* 70% wysokości okna przeglądarki */
+    height: 70vh;
     width: 90%;
-    margin: 20px auto; /* Wyśrodkowanie mapy */
+    margin: 20px auto;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* Style dla okienka popup */
 .popup-content {
     font-size: 14px;
 }
@@ -33,7 +33,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Styl przycisku nawigacji */
 .leaflet-popup-content .nav-link,
 .leaflet-popup-content .nav-link:link,
 .leaflet-popup-content .nav-link:visited {
@@ -41,41 +40,102 @@ h1 {
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #0078FF; /* Niebieski kolor */
-    color: #ffffff !important; /* Wymuszony biały tekst */
-    text-decoration: none !important; /* Wymuszony brak podkreślenia */
-    font-weight: 700 !important; /* Wymuszone pogrubienie */
+    background-color: #0078FF;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
     border-radius: 5px;
     text-align: center;
     transition: background-color 0.2s;
 }
 
-/* Stan po najechaniu myszką */
 .leaflet-popup-content .nav-link:hover {
-    background-color: #0056b3; /* Ciemniejszy niebieski */
-    color: #ffffff !important; /* Tekst nadal biały */
+    background-color: #0056b3;
+    color: #ffffff !important;
 }
 
-
-/* --- ZAKTUALIZOWANA SEKCJA OCENY --- */
-
-/* Kontener trzymający gwiazdki i tekst razem w jednej linii */
 .rating-container {
     display: flex;
-    align-items: center; /* Wyrównuje gwiazdki i tekst w pionie */
+    align-items: center;
     margin-top: 8px;
 }
-
-/* Styl samych gwiazdek */
 .star-rating {
-    color: #f5c518; /* Złoty kolor gwiazdek */
+    color: #f5c518;
     font-size: 1.2em;
-    margin-right: 8px; /* Odstęp między gwiazdkami a tekstem */
+    margin-right: 8px;
 }
-
-/* Styl dla tekstu (4/5) */
 .rating-text {
-    color: #333333; /* Ciemny kolor tekstu dla czytelności */
+    color: #333333;
     font-size: 1em;
     font-weight: bold;
+}
+
+/* --- NOWE STYLE DLA PANELU STEROWANIA (Opcja 2, 3, 5) --- */
+.container {
+    width: 90%;
+    margin: 0 auto 15px auto;
+}
+
+#controls {
+    display: flex;
+    flex-wrap: wrap; /* Aby łamało się na mniejszych ekranach */
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#filters {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0;
+    min-width: 250px; /* Minimalna szerokość */
+}
+#filters legend {
+    font-weight: bold;
+    padding: 0 5px;
+}
+#filters label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+#actions {
+    display: flex;
+    flex-direction: column; /* Przyciski jeden pod drugim */
+    gap: 10px; /* Odstęp między przyciskami */
+    margin-top: 10px; /* Odstęp na małych ekranach */
+}
+
+/* Style przycisków akcji */
+#find-nearest, #report-new {
+    display: block;
+    padding: 10px 15px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+#find-nearest {
+    background-color: #28a745; /* Zielony */
+}
+#find-nearest:hover {
+    background-color: #218838;
+}
+
+#report-new {
+    background-color: #dc3545; /* Czerwony */
+}
+#report-new:hover {
+    background-color: #c82333;
 }
