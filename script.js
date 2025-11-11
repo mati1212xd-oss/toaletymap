@@ -8,77 +8,128 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // === GLOBALNE ZMIENNE ===
-let allMarkers = []; // Przechowamy tu wszystkie pinezki (dla filtrów)
-let userCurrentLocation = null; // Przechowamy tu lokalizację użytkownika (dla "znajdź najbliższą")
+let allMarkers = []; 
+let userCurrentLocation = null; 
+let currentLang = 'pl'; // Domyślny język
 
+// === SŁOWNIK TŁUMACZEŃ (Static Text) ===
+const translations = {
+    pl: {
+        title: "Mapa Toalet na WUM",
+        filter_title: "Filtruj wyniki",
+        filter_best: "Tylko najlepsze (5 ★)",
+        btn_nearest: "📍 Znajdź najbliższą",
+        btn_report: "+ Zgłoś nową",
+        nav_btn: "Nawiguj do toalety",
+        rating_prefix: "Ocena"
+    },
+    en: {
+        title: "WUM Toilet Map",
+        filter_title: "Filter results",
+        filter_best: "Best rated only (5 ★)",
+        btn_nearest: "📍 Find nearest",
+        btn_report: "+ Report new",
+        nav_btn: "Navigate to toilet",
+        rating_prefix: "Rating"
+    }
+};
 
-// === BAZA DANYCH TOALET (uproszczona) ===
+// === BAZA DANYCH TOALET (Dwujęzyczna) ===
 const toalety = [
     {
         lat: 52.2078559642937, lng: 20.985786707695123,
-        nazwa: 'UCS - parter lewe skrzydło',
-        opis: 'Dużo toalet 1-osobowych nowoczesnych. Na ostatnim piętrze duże toalety wieloosobowe.',
+        nazwa: { pl: 'UCS - parter lewe skrzydło', en: 'UCS - Ground floor left wing' },
+        opis: { 
+            pl: 'Dużo toalet 1-osobowych nowoczesnych. Na ostatnim piętrze duże toalety wieloosobowe.',
+            en: 'Many modern single-person toilets. Large multi-person toilets on the top floor.'
+        },
         zdjecie: 'images/UCS1.jpg', ocena: 4
     },
     {
         lat: 52.20820427646147, lng: 20.979830088093806,
-        nazwa: 'CSM',
-        opis: 'Duże toalety w szatniach w podziemiach, brak ludzi i brak zasięgu. Na 2 piętrze też spoko.',
+        nazwa: { pl: 'CSM', en: 'CSM' },
+        opis: { 
+            pl: 'Duże toalety w szatniach w podziemiach, brak ludzi i brak zasięgu. Na 2 piętrze też spoko.',
+            en: 'Large toilets in basement locker rooms, no people and no signal. 2nd floor is also okay.'
+        },
         zdjecie: 'images/CSM.jpg', ocena: 4
     },
     {
         lat: 52.205868532657604, lng: 20.981562853951694,
-        nazwa: 'CSR',
-        opis: 'Fajne toalety, dużo ich na każdym piętrze, mało ludzi, ale otwarte.',
+        nazwa: { pl: 'CSR', en: 'CSR' },
+        opis: { 
+            pl: 'Fajne toalety, dużo ich na każdym piętrze, mało ludzi, ale otwarte.',
+            en: 'Nice toilets, plenty on every floor, few people, but open.'
+        },
         zdjecie: 'images/placeholder.jpg', ocena: 5
     },
     {
         lat: 52.20594085661789, lng: 20.984465004146944,
-        nazwa: 'CD',
-        opis: 'Jedna na lewo od wejścia, druga na -1 przy windach. Słabe, dużo ludzi.',
+        nazwa: { pl: 'CD', en: 'CD' },
+        opis: { 
+            pl: 'Jedna na lewo od wejścia, druga na -1 przy windach. Słabe, dużo ludzi.',
+            en: 'One to the left of the entrance, another on level -1 by the elevators. Poor quality, crowded.'
+        },
         zdjecie: 'images/placeholder.jpg', ocena: 1
     },
     {
         lat: 52.20774234274788, lng: 20.980468512641032,
-        nazwa: 'Zakład Patomorfologii',
-        opis: 'Dobra toaleta na 3 piętrze.',
+        nazwa: { pl: 'Zakład Patomorfologii', en: 'Pathomorphology Dept.' },
+        opis: { 
+            pl: 'Dobra toaleta na 3 piętrze.',
+            en: 'Good toilet on the 3rd floor.'
+        },
         zdjecie: 'images/placeholder.jpg', ocena: 3
     },
     {
         lat: 52.209846175718916, lng: 20.986074329551887,
-        nazwa: 'Farmacja',
-        opis: 'Słabe, średniowieczne toalety w piwnicach.',
+        nazwa: { pl: 'Farmacja', en: 'Pharmacy Faculty' },
+        opis: { 
+            pl: 'Słabe, średniowieczne toalety w piwnicach.',
+            en: 'Poor, medieval-style toilets in the basement.'
+        },
         zdjecie: 'images/placeholder.jpg', ocena: 2
     },
     {
         lat: 52.22506344729113, lng: 20.9983348485012,
-        nazwa: 'Okulistyka',
-        opis: 'Totalny PRL... Jednoosobowe...',
+        nazwa: { pl: 'Okulistyka', en: 'Ophthalmology' },
+        opis: { 
+            pl: 'Totalny PRL, spłukiwanie sznurkiem zwisającym z góry. Jedna w szatni studenckiej w podziemiach...',
+            en: 'Total communist era style, flush with a hanging string. One in the student locker room in the basement...'
+        },
         zdjecie: 'images/Okulistyka.jpg', ocena: 3
     },
     {
         lat: 52.23423239446239, lng: 20.972576939699074,
-        nazwa: 'Szpital Wolska',
-        opis: 'Bardzo fajne toalety na 1 piętrze... Fajna toaleta na prawo za szatnią...',
+        nazwa: { pl: 'Szpital Wolska', en: 'Wolska Hospital' },
+        opis: { 
+            pl: 'Bardzo fajne toalety na 1 piętrze w budynku gdzie są sale seminaryjne, mało ludzi...',
+            en: 'Very nice toilets on the 1st floor in the seminar rooms building, few people...'
+        },
         zdjecie: 'images/placeholder.jpg', ocena: 5
     },
     {
         lat: 52.21707823174565, lng: 21.02041209833766,
-        nazwa: 'Kampus Litewska',
-        opis: 'Dobre, nowoczesne toalety na każdym piętrze, dosyć mało ludzi.',
+        nazwa: { pl: 'Kampus Litewska', en: 'Litewska Campus' },
+        opis: { 
+            pl: 'Dobre, nowoczesne toalety na każdym piętrze, dosyć mało ludzi.',
+            en: 'Good, modern toilets on every floor, not too crowded.'
+        },
         zdjecie: 'images/placeholder.jpg', ocena: 4
     },
     {
         lat: 52.22509853510605, lng: 21.003075108792096,
-        nazwa: 'Collegium Anatomicum',
-        opis: 'Duża, bardzo duży ruch, dużo ludzi, nieprzyjemna.',
+        nazwa: { pl: 'Collegium Anatomicum', en: 'Collegium Anatomicum' },
+        opis: { 
+            pl: 'Duża, bardzo duży ruch, dużo ludzi, nieprzyjemna.',
+            en: 'Large, very busy, crowded, unpleasant.'
+        },
         zdjecie: 'images/anatomicum.jpg', ocena: 1
     }
 ];
 
 // === FUNKCJE POMOCNICZE ===
 
-// Funkcja do gwiazdek
 function stworzGwiazdki(ocena) {
     let gwiazdki = '';
     for (let i = 1; i <= 5; i++) {
@@ -87,59 +138,97 @@ function stworzGwiazdki(ocena) {
     return gwiazdki;
 }
 
-// --- Funkcja zwracająca kolorową ikonę ---
 function getIcon(ocena) {
     let iconColor;
-    if (ocena >= 5) {
-        iconColor = 'green'; // 5 gwiazdek
-    } else if (ocena >= 3) {
-        iconColor = 'orange'; // 3-4 gwiazdki
-    } else {
-        iconColor = 'red'; // 1-2 gwiazdki
-    }
+    if (ocena >= 5) iconColor = 'green';
+    else if (ocena >= 3) iconColor = 'orange';
+    else iconColor = 'red';
 
     return L.AwesomeMarkers.icon({
-        icon: 'map-marker', // Zmieniona ikona na ogólną
+        icon: 'map-marker',
         markerColor: iconColor,
         prefix: 'fa'
     });
 }
 
-// === TWORZENIE MARKERÓW ===
-toalety.forEach(toaleta => {
-    // 1. Stwórz HTML dla okienka popup
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
-    const popupHTML = `
-        <div class="popup-content">
-            <h3>${toaleta.nazwa}</h3>
-            <img src="${toaleta.zdjecie}" alt="Zdjęcie toalety: ${toaleta.nazwa}">
-            <p>${toaleta.opis}</p>
-            <a href="${googleMapsUrl}" target="_blank" class="nav-link">Nawiguj do toalety</a>
-            <div class="rating-container" title="Ocena: ${toaleta.ocena}/5">
-                <span class="star-rating">${stworzGwiazdki(toaleta.ocena)}</span>
-                <span class="rating-text">(${toaleta.ocena}/5)</span>
+// === LOGIKA RENDEROWANIA MAPY (Zmieniona dla języków) ===
+
+// Funkcja która czyści mapę i rysuje pinezki w wybranym języku
+function renderMarkers() {
+    // 1. Usuń istniejące markery z mapy i wyczyść tablicę
+    allMarkers.forEach(marker => map.removeLayer(marker));
+    allMarkers = [];
+
+    // 2. Stwórz nowe markery
+    toalety.forEach(toaleta => {
+        // Wybierz tekst w odpowiednim języku
+        const nazwa = toaleta.nazwa[currentLang];
+        const opis = toaleta.opis[currentLang];
+        const navBtnText = translations[currentLang].nav_btn;
+        const ratingText = translations[currentLang].rating_prefix;
+
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
+        
+        const popupHTML = `
+            <div class="popup-content">
+                <h3>${nazwa}</h3>
+                <img src="${toaleta.zdjecie}" alt="${nazwa}">
+                <p>${opis}</p>
+                <a href="${googleMapsUrl}" target="_blank" class="nav-link">${navBtnText}</a>
+                <div class="rating-container" title="${ratingText}: ${toaleta.ocena}/5">
+                    <span class="star-rating">${stworzGwiazdki(toaleta.ocena)}</span>
+                    <span class="rating-text">(${toaleta.ocena}/5)</span>
+                </div>
             </div>
-        </div>
-    `;
+        `;
 
-    // 2. Stwórz marker z kolorową ikoną
-    const marker = L.marker([toaleta.lat, toaleta.lng], {
-        icon: getIcon(toaleta.ocena) 
-    })
-    .bindPopup(popupHTML)
-    .addTo(map);
+        const marker = L.marker([toaleta.lat, toaleta.lng], {
+            icon: getIcon(toaleta.ocena) 
+        }).bindPopup(popupHTML);
 
-    // 3. Dodaj dane toalety do obiektu markera (ważne dla filtrów!)
-    marker.toaletaData = toaleta;
+        marker.toaletaData = toaleta; // Zachowujemy dane dla filtrów
+        allMarkers.push(marker);
+    });
 
-    // 4. Zapisz marker w globalnej tablicy
-    allMarkers.push(marker);
+    // 3. Zastosuj aktualne filtry do nowo stworzonych markerów
+    updateFilters();
+}
+
+// === ZMIANA JĘZYKA ===
+
+function setLanguage(lang) {
+    currentLang = lang;
+    
+    // 1. Zaktualizuj teksty na stronie (HTML)
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            element.innerText = translations[lang][key];
+        }
+    });
+
+    // 2. Przerysuj mapę z nowym językiem
+    renderMarkers();
+
+    // 3. Zmień tekst przycisku
+    const btn = document.getElementById('lang-switch');
+    if (lang === 'pl') {
+        btn.innerText = '🇬🇧 Switch to English';
+    } else {
+        btn.innerText = '🇵🇱 Zmień na Polski';
+    }
+}
+
+// Obsługa przycisku zmiany języka
+document.getElementById('lang-switch').addEventListener('click', () => {
+    const newLang = (currentLang === 'pl') ? 'en' : 'pl';
+    setLanguage(newLang);
 });
 
 
-// === LOGIKA DLA NOWYCH FUNKCJI ===
+// === LOGIKA POZOSTAŁYCH FUNKCJI ===
 
-// --- Logika filtrowania (Uproszczona) ---
+// --- Filtrowanie ---
 const filterCheckboxes = document.querySelectorAll('.filter-check');
 
 function updateFilters() {
@@ -147,32 +236,26 @@ function updateFilters() {
 
     allMarkers.forEach(marker => {
         const data = marker.toaletaData;
-        let show = true; // Domyślnie pokaż
+        let show = true;
 
-        // Sprawdź filtr 5 gwiazdek
         if (filter5star && data.ocena < 5) {
             show = false;
         }
 
-        // Pokaż lub ukryj marker
-        if (show) {
-            marker.addTo(map);
-        } else {
-            marker.removeFrom(map);
-        }
+        if (show) marker.addTo(map);
+        else marker.removeFrom(map);
     });
 }
 
-// Nasłuchuj zmian na każdym checkboxie
-filterCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateFilters);
-});
+filterCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateFilters));
 
-
-// --- Logika przycisku "Znajdź najbliższą" ---
+// --- Znajdź najbliższą ---
 document.getElementById('find-nearest').addEventListener('click', () => {
     if (!userCurrentLocation) {
-        alert("Nie można znaleźć Twojej lokalizacji. Upewnij się, że zezwoliłeś na dostęp.");
+        const msg = currentLang === 'pl' 
+            ? "Nie można znaleźć Twojej lokalizacji. Upewnij się, że zezwoliłeś na dostęp."
+            : "Cannot find your location. Please ensure you allowed access.";
+        alert(msg);
         return;
     }
 
@@ -182,7 +265,6 @@ document.getElementById('find-nearest').addEventListener('click', () => {
     allMarkers.forEach(marker => {
         if (map.hasLayer(marker)) { 
             const distance = userCurrentLocation.distanceTo(marker.getLatLng());
-            
             if (distance < minDistance) {
                 minDistance = distance;
                 closestMarker = marker;
@@ -191,15 +273,18 @@ document.getElementById('find-nearest').addEventListener('click', () => {
     });
 
     if (closestMarker) {
-        map.setView(closestMarker.getLatLng(), 18); // Przybliż na maxa
+        map.setView(closestMarker.getLatLng(), 18);
         closestMarker.openPopup();
     } else {
-        alert("Brak pasujących toalet na mapie. Spróbuj wyłączyć filtry.");
+        const msg = currentLang === 'pl' 
+            ? "Brak pasujących toalet na mapie."
+            : "No matching toilets on the map.";
+        alert(msg);
     }
 });
 
 
-// --- SEKCJA LOKALIZACJI UŻYTKOWNIKA ---
+// === LOKALIZACJA UŻYTKOWNIKA ===
 let userLocationMarker = null;
 let userAccuracyCircle = null;
 
@@ -216,7 +301,7 @@ function onLocationFound(e) {
 
     if (!userLocationMarker) {
         userLocationMarker = L.circleMarker(e.latlng, locationMarkerStyle).addTo(map)
-            .bindPopup("Jesteś tutaj").openPopup();
+            .bindPopup("Jesteś tutaj / You are here").openPopup();
         userAccuracyCircle = L.circle(e.latlng, radius, accuracyCircleStyle).addTo(map);
         map.setView(e.latlng, 17); 
     } else {
@@ -226,10 +311,14 @@ function onLocationFound(e) {
 }
 
 function onLocationError(e) {
-    alert("Nie można pobrać lokalizacji. \nUpewnij się, że zezwoliłeś na dostęp w przeglądarce i masz włączony GPS.");
+    console.log("Location access denied or error.");
 }
 
 map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
+// Uruchomienie
 map.locate({ watch: true, setView: false, maxZoom: 17 });
+
+// Pierwsze renderowanie (po załadowaniu strony)
+renderMarkers();
