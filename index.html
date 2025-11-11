@@ -14,21 +14,21 @@
 </head>
 <body>
     
-    <h1>Mapa Toalet na WUM</h1>
+    <h1 data-i18n="title">Mapa Toalet na WUM</h1>
 
     <div class="container">
         <div id="controls">
             <fieldset id="filters">
-                <legend>Filtruj wyniki</legend>
+                <legend data-i18n="filter_title">Filtruj wyniki</legend>
                 <label>
                     <input type="checkbox" id="filter-5star" value="5" class="filter-check"> 
-                    Tylko najlepsze (5 ★)
+                    <span data-i18n="filter_best">Tylko najlepsze (5 ★)</span>
                 </label>
             </fieldset>
 
             <div id="actions">
-                <button id="find-nearest">📍 Znajdź najbliższą</button>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdgj_ZUwihd81LnS1D1vmGvzONcBhxhs6KahY0CLmur25qweQ/viewform?usp=dialog" target="_blank" id="report-new">
+                <button id="lang-switch">🇬🇧 EN / PL</button> <button id="find-nearest" data-i18n="btn_nearest">📍 Znajdź najbliższą</button>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdgj_ZUwihd81LnS1D1vmGvzONcBhxhs6KahY0CLmur25qweQ/viewform?usp=dialog" target="_blank" id="report-new" data-i18n="btn_report">
                     + Zgłoś nową
                 </a>
             </div>
@@ -38,9 +38,7 @@
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
-    
     <script src="script.js"></script>
     
 </body>
