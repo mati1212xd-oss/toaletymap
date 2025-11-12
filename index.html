@@ -22,7 +22,7 @@
                 <legend data-i18n="filter_title">Filtruj wyniki</legend>
                 <label>
                     <input type="checkbox" id="filter-5star" value="5" class="filter-check"> 
-                    <span data-i18n="filter_best">Tylko najlepsze (5 ★)</span>
+                    <span data-i118n="filter_best">Tylko najlepsze (5 ★)</span>
                 </label>
             </fieldset>
 
@@ -47,11 +47,13 @@
             </div>
         </div>
 
+        <button id="sheet-close" aria-label="Zamknij panel">×</button>
+
         <div id="expanded-content">
-            <button id="sheet-close" aria-label="Zamknij panel">×</button>
             <img id="sheet-img" src="" alt="Zdjęcie toalety">
             <p id="sheet-desc"></p>
-            <a id="sheet-nav" href="#" target="_blank"></a>
+            
+            <a id="sheet-nav" class="nav-link" href="#" target="_blank"></a>
         </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
