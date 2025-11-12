@@ -21,14 +21,10 @@ h1 {
 .popup-content {
     font-size: 14px;
 }
-
-/* --- ZMIANA JEST TUTAJ --- */
 .popup-content h3 {
     margin: 0 0 10px 0;
-    text-align: center; /* Wyśrodkowanie nazwy toalety */
+    text-align: center;
 }
-/* ------------------------ */
-
 .popup-content img {
     width: 100%;
     max-width: 200px;
@@ -152,12 +148,16 @@ h1 {
     background-color: #333;
 }
 
-/* --- POPRAWKA DLA MOBILNYCH OKIENEK --- */
+/* --- POPRAWKA DLA MOBILNYCH OKIENEK (Wersja 3) --- */
+
+/* Usuwamy max-width stąd, bo zajmie się tym JS */
 .leaflet-popup-content-wrapper {
-    max-width: 300px !important;
+    /* max-width: 300px !important; <-- USUNIĘTE */
 }
+
+/* Ustawiamy stałą max-height (w pikselach) i przewijanie */
 .leaflet-popup-content {
-    max-height: 60vh !important;
-    overflow-y: auto !important;
+    max-height: 400px !important; /* Stała wysokość w pikselach */
+    overflow-y: auto !important; /* Przewijanie pionowe */
     padding-right: 15px !important; 
 }
