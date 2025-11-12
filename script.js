@@ -162,7 +162,7 @@ function getIcon(ocena) {
     });
 }
 
-// === LOGIKA RENDEROWANIA MAPY (ZMIENIONA) ===
+// === LOGIKA RENDEROWANIA MAPY ===
 function renderMarkers() {
     allMarkers.forEach(marker => map.removeLayer(marker));
     allMarkers = [];
@@ -174,25 +174,24 @@ function renderMarkers() {
 
         marker.toaletaData = toaleta;
 
-        // NOWA LOGIKA KLIKNIĘCIA MARKERA
         marker.on('click', (e) => {
-            L.DomEvent.stopPropagation(e); // Zapobiega kliknięciu na mapę (które zamyka panel)
+            L.DomEvent.stopPropagation(e); 
             openBottomSheet(toaleta);
-            map.setView(marker.getLatLng()); // centruje mapę
+            map.setView(marker.getLatLng()); 
         });
 
         allMarkers.push(marker);
     });
 
-    updateFilters(); // Zastosuj filtry do nowo stworzonych markerów
+    updateFilters(); 
 }
 
-// === NOWE FUNKCJE OBSŁUGI PANELU ===
+// === FUNKCJE OBSŁUGI PANELU ===
 function openBottomSheet(toaleta) {
-    currentSelectedToilet = toaleta; // Zapisz wybraną toaletę
+    currentSelectedToilet = toaleta; 
     const lang = currentLang;
 
-    // 1. Wypełnij treść zwiniętą
+    // Wypełnij treść zwiniętą
     sheetTitle.innerText = toaleta.nazwa[lang];
     sheetRating.innerHTML = `
         <div class="rating-container" title="${translations[lang].rating_prefix}: ${toaleta.ocena}/5">
@@ -201,29 +200,26 @@ function openBottomSheet(toaleta) {
         </div>
     `;
 
-    // 2. Wypełnij treść rozwiniętą
+    // Wypełnij treść rozwiniętą
     sheetImg.src = toaleta.zdjecie;
     sheetImg.alt = `${translations[lang].rating_prefix}: ${toaleta.nazwa[lang]}`;
     sheetDesc.innerText = toaleta.opis[lang];
     sheetNav.href = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
     sheetNav.innerText = translations[lang].nav_btn;
     
-    // Upewnij się, że panel jest zwinięty
     sheet.classList.remove('expanded');
-    // Pokaż panel w stanie zwiniętym
     sheet.classList.add('collapsed');
 
-    // Przewiń treść rozwiniętą do góry (na wypadek, gdyby była przewinięta)
     document.getElementById('expanded-content').scrollTop = 0;
 }
 
 function closeBottomSheet() {
-    currentSelectedToilet = null; // Wyczyść wybór
+    currentSelectedToilet = null; 
     sheet.classList.remove('expanded');
-    sheet.classList.remove('collapsed'); // Całkowicie chowa panel (do height: 0)
+    sheet.classList.remove('collapsed'); 
 }
 
-// === LOGIKA ZMIANY JĘZYKA (ZAKTUALIZOWANA) ===
+// === LOGIKA ZMIANY JĘZYKA ===
 function setLanguage(lang) {
     currentLang = lang;
     
@@ -234,15 +230,12 @@ function setLanguage(lang) {
         }
     });
 
-    // Przerysuj markery (zmieni ich eventy click)
     renderMarkers();
 
-    // Zaktualizuj otwarty panel (jeśli jest)
     if (currentSelectedToilet) {
-        openBottomSheet(currentSelectedToilet); // Wypełni panel nowym językiem
+        openBottomSheet(currentSelectedToilet); 
     }
 
-    // Zmień tekst przycisku języka
     const btn = document.getElementById('lang-switch');
     if (lang === 'pl') {
         btn.innerText = '🇬🇧 Switch to English';
@@ -256,7 +249,7 @@ document.getElementById('lang-switch').addEventListener('click', () => {
     setLanguage(newLang);
 });
 
-// === LOGIKA FILTRÓW (Bez zmian) ===
+// === LOGIKA FILTRÓW ===
 const filterCheckboxes = document.querySelectorAll('.filter-check');
 function updateFilters() {
     const filter5star = document.getElementById('filter-5star').checked;
@@ -272,7 +265,7 @@ function updateFilters() {
 }
 filterCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateFilters));
 
-// === ZNAJDŹ NAJBLIŻSZĄ (ZAKTUALIZOWANY) ===
+// === ZNAJDŹ NAJBLIŻSZĄ ===
 document.getElementById('find-nearest').addEventListener('click', () => {
     if (!userCurrentLocation) {
         const msg = currentLang === 'pl' 
@@ -297,7 +290,6 @@ document.getElementById('find-nearest').addEventListener('click', () => {
 
     if (closestMarker) {
         map.setView(closestMarker.getLatLng(), 18);
-        // Zamiast openPopup(), wywołujemy naszą nową funkcję
         openBottomSheet(closestMarker.toaletaData);
     } else {
         const msg = currentLang === 'pl' 
@@ -308,7 +300,7 @@ document.getElementById('find-nearest').addEventListener('click', () => {
 });
 
 
-// === LOKALIZACJA UŻYTKOWNIKA (Bez zmian) ===
+// === LOKALIZACJA UŻYTKOWNIKA ===
 let userLocationMarker = null;
 let userAccuracyCircle = null;
 
@@ -325,7 +317,7 @@ function onLocationFound(e) {
 
     if (!userLocationMarker) {
         userLocationMarker = L.circleMarker(e.latlng, locationMarkerStyle).addTo(map)
-            .bindPopup("Jesteś tutaj / You are here"); // Usunięte .openPopup()
+            .bindPopup("Jesteś tutaj / You are here"); 
         userAccuracyCircle = L.circle(e.latlng, radius, accuracyCircleStyle).addTo(map);
         map.setView(e.latlng, 17); 
     } else {
@@ -342,19 +334,28 @@ map.on('locationerror', onLocationError);
 map.locate({ watch: true, setView: false, maxZoom: 17 });
 
 // === NOWE EVENT LISTENERY DLA PANELU ===
+
 // Kliknięcie w zwinięty panel -> rozwija go
 collapsedContent.addEventListener('click', () => {
-    if (currentSelectedToilet) { // Rozwijaj tylko, jeśli coś jest wybrane
+    if (currentSelectedToilet) {
         sheet.classList.add('expanded');
         sheet.classList.remove('collapsed');
     }
 });
 
-// Kliknięcie przycisku "Zamknij" -> zwija go
+// === ZMIANA JEST TUTAJ ===
+// Kliknięcie przycisku "Zamknij" -> inteligentna obsługa
 sheetClose.addEventListener('click', () => {
-    sheet.classList.remove('expanded');
-    sheet.classList.add('collapsed');
+    if (sheet.classList.contains('expanded')) {
+        // Jeśli jest 100%, zwiń do 25%
+        sheet.classList.remove('expanded');
+        sheet.classList.add('collapsed');
+    } else if (sheet.classList.contains('collapsed')) {
+        // Jeśli jest 25%, zamknij całkowicie (do 0%)
+        closeBottomSheet();
+    }
 });
+// === KONIEC ZMIANY ===
 
 // Kliknięcie w mapę -> zamyka całkowicie
 map.on('click', closeBottomSheet);
