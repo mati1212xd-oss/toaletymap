@@ -127,23 +127,35 @@ h1 {
 }
 
 #find-nearest {
-    background-color: #28a745; /* Zielony */
+    background-color: #28a745;
 }
 #find-nearest:hover {
     background-color: #218838;
 }
 
 #report-new {
-    background-color: #dc3545; /* Czerwony */
+    background-color: #dc3545;
 }
 #report-new:hover {
     background-color: #c82333;
 }
 
-/* Przycisk języka - Szary/Granatowy */
 #lang-switch {
     background-color: #555; 
 }
 #lang-switch:hover {
     background-color: #333;
+}
+
+/* --- POPRAWKA DLA MOBILNYCH OKIENEK --- */
+
+/* Ustawiamy maksymalny rozmiar dla "opakowania" okienka */
+.leaflet-popup-content-wrapper {
+    max-width: 300px !important;  /* Stała maks. szerokość */
+    max-height: 60vh !important; /* Maks. 60% wysokości ekranu */
+}
+
+/* Ustawiamy przewijanie dla samej treści wewnątrz */
+.leaflet-popup-content {
+    overflow-y: auto !important; /* Włącza przewijanie pionowe */
 }
