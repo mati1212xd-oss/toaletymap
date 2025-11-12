@@ -10,9 +10,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // === GLOBALNE ZMIENNE ===
 let allMarkers = []; 
 let userCurrentLocation = null; 
-let currentLang = 'pl'; // Domyślny język
+let currentLang = 'pl'; 
 
-// === SŁOWNIK TŁUMACZEŃ (Static Text) ===
+// === SŁOWNIK TŁUMACZEŃ ===
 const translations = {
     pl: {
         title: "Mapa Toalet na WUM",
@@ -34,7 +34,7 @@ const translations = {
     }
 };
 
-// === BAZA DANYCH TOALET (Dwujęzyczna) ===
+// === BAZA DANYCH TOALET ===
 const toalety = [
     {
         lat: 52.2078559642937, lng: 20.985786707695123,
@@ -129,7 +129,6 @@ const toalety = [
 ];
 
 // === FUNKCJE POMOCNICZE ===
-
 function stworzGwiazdki(ocena) {
     let gwiazdki = '';
     for (let i = 1; i <= 5; i++) {
@@ -152,10 +151,17 @@ function getIcon(ocena) {
 }
 
 // === LOGIKA RENDEROWANIA MAPY ===
-
 function renderMarkers() {
     allMarkers.forEach(marker => map.removeLayer(marker));
     allMarkers = [];
+
+    // --- NOWA SEKCJA (Opcje okienka) ---
+    // Ustawiamy opcje programowo, aby zastąpić domyślne zachowanie Leaflet
+    const popupOptions = {
+        maxWidth: 300,  // Maksymalna szerokość w pikselach
+        keepInView: true // Stara się trzymać okienko na ekranie
+    };
+    // --- Koniec nowej sekcji ---
 
     toalety.forEach(toaleta => {
         const nazwa = toaleta.nazwa[currentLang];
@@ -165,7 +171,6 @@ function renderMarkers() {
 
         const googleMapsUrl = `http://googleusercontent.com/maps/google.com/2{toaleta.lat},${toaleta.lng}`;
         
-        // Zwróć uwagę na `alt="${nazwa}"` przy obrazku.
         const popupHTML = `
             <div class="popup-content">
                 <h3>${nazwa}</h3>
@@ -179,26 +184,21 @@ function renderMarkers() {
             </div>
         `;
 
+        // --- ZMIANA TUTAJ: Dodajemy popupOptions do bindPopup ---
         const marker = L.marker([toaleta.lat, toaleta.lng], {
             icon: getIcon(toaleta.ocena) 
-        }).bindPopup(popupHTML);
+        }).bindPopup(popupHTML, popupOptions); // <-- DODANE OPCJE
 
         marker.toaletaData = toaleta;
 
-        // --- NOWA SEKCJA (Naprawa ładowania obrazka) ---
-        // Dodajemy "słuchacza" do każdego markera
         marker.on('popupopen', function(e) {
             const popup = e.popup;
-            // Dajemy Leaflet chwilę (10ms) na narysowanie okienka
             setTimeout(() => {
-                // Znajdujemy obrazek wewnątrz okienka
                 const img = popup.getElement()?.querySelector('.popup-content img');
                 if (img) {
-                    // Jeśli obrazek jest już w cache, od razu aktualizuj pozycję
                     if (img.complete) {
                         popup.update();
                     } else {
-                        // Jeśli nie, poczekaj aż się załaduje i WTEDY zaktualizuj pozycję
                         img.onload = () => {
                             popup.update();
                         };
@@ -206,7 +206,6 @@ function renderMarkers() {
                 }
             }, 10); 
         });
-        // --- Koniec nowej sekcji ---
 
         allMarkers.push(marker);
     });
@@ -215,7 +214,6 @@ function renderMarkers() {
 }
 
 // === ZMIANA JĘZYKA ===
-
 function setLanguage(lang) {
     currentLang = lang;
     
