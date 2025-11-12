@@ -1,7 +1,15 @@
 // === INICJALIZACJA MAPY ===
 const mapCenter = [52.213, 20.987]; 
 const initialZoom = 15; 
-const map = L.map('map').setView(mapCenter, initialZoom);
+// ZMIANA: Wyłączamy domyślny zoom
+const map = L.map('map', {
+    zoomControl: false 
+}).setView(mapCenter, initialZoom);
+
+// ZMIANA: Dodajemy zoom w nowym miejscu
+L.control.zoom({
+    position: 'bottomright'
+}).addTo(map);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -20,17 +28,23 @@ const sheetClose = document.getElementById('sheet-close');
 const sheetTitle = document.getElementById('sheet-title');
 const sheetRating = document.getElementById('sheet-rating');
 const expandedSheetTitle = document.getElementById('expanded-sheet-title'); 
-// ZMIANA: Dodana referencja do nowej oceny
 const expandedSheetRating = document.getElementById('expanded-sheet-rating');
 const sheetImg = document.getElementById('sheet-img');
 const sheetDesc = document.getElementById('sheet-desc');
 const sheetNav = document.getElementById('sheet-nav');
+
+// ZMIANA: Referencje do Sidebar
+const sidebar = document.getElementById('sidebar');
+const menuToggle = document.getElementById('menu-toggle');
+const sidebarClose = document.getElementById('sidebar-close');
+const mapBackdrop = document.getElementById('map-backdrop');
 
 
 // === SŁOWNIK TŁUMACZEŃ ===
 const translations = {
     pl: {
         title: "Mapa Toalet na WUM",
+        menu_title: "Menu", // NOWY
         filter_title: "Filtruj wyniki",
         filter_best: "Tylko najlepsze (5 ★)",
         btn_nearest: "📍 Znajdź najbliższą",
@@ -40,6 +54,7 @@ const translations = {
     },
     en: {
         title: "WUM Toilet Map",
+        menu_title: "Menu", // NOWY
         filter_title: "Filter results",
         filter_best: "Best rated only (5 ★)",
         btn_nearest: "📍 Find nearest",
@@ -50,6 +65,7 @@ const translations = {
 };
 
 // === BAZA DANYCH TOALET ===
+// (Bez zmian - pominięta dla oszczędności miejsca, jest identyczna jak w poprzedniej odpowiedzi)
 const toalety = [
     {
         lat: 52.2078559642937, lng: 20.985786707695123,
@@ -194,7 +210,6 @@ function openBottomSheet(toaleta) {
     currentSelectedToilet = toaleta; 
     const lang = currentLang;
 
-    // Tworzymy kod HTML dla oceny
     const ratingHTML = `
         <div class="rating-container" title="${translations[lang].rating_prefix}: ${toaleta.ocena}/5">
             <span class="star-rating">${stworzGwiazdki(toaleta.ocena)}</span>
@@ -204,11 +219,10 @@ function openBottomSheet(toaleta) {
 
     // 1. Wypełnij treść zwiniętą
     sheetTitle.innerText = toaleta.nazwa[lang];
-    sheetRating.innerHTML = ratingHTML; // Wstawiamy HTML oceny
+    sheetRating.innerHTML = ratingHTML;
 
     // 2. Wypełnij treść rozwiniętą
     expandedSheetTitle.innerText = toaleta.nazwa[lang]; 
-    // ZMIANA: Wstawiamy HTML oceny również tutaj
     expandedSheetRating.innerHTML = ratingHTML; 
     
     sheetImg.src = toaleta.zdjecie;
@@ -227,6 +241,12 @@ function closeBottomSheet() {
     currentSelectedToilet = null; 
     sheet.classList.remove('expanded');
     sheet.classList.remove('collapsed'); 
+}
+
+// NOWA FUNKCJA: Zamykanie bocznego panelu
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    mapBackdrop.classList.remove('open');
 }
 
 // === LOGIKA ZMIANY JĘZYKA ===
@@ -301,6 +321,7 @@ document.getElementById('find-nearest').addEventListener('click', () => {
     if (closestMarker) {
         map.setView(closestMarker.getLatLng(), 18);
         openBottomSheet(closestMarker.toaletaData);
+        closeSidebar(); // Zamknij menu po znalezieniu
     } else {
         const msg = currentLang === 'pl' 
             ? "Brak pasujących toalet na mapie."
@@ -343,7 +364,19 @@ map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 map.locate({ watch: true, setView: false, maxZoom: 17 });
 
-// === NOWE EVENT LISTENERY DLA PANELU ===
+// === EVENT LISTENERY DLA PANELI ===
+
+// --- Panel Boczny (Sidebar) ---
+menuToggle.addEventListener('click', (e) => {
+    e.stopPropagation(); // Zatrzymaj kliknięcie, aby nie poszło do mapy
+    sidebar.classList.add('open');
+    mapBackdrop.classList.add('open');
+});
+
+sidebarClose.addEventListener('click', closeSidebar);
+mapBackdrop.addEventListener('click', closeSidebar);
+
+// --- Panel Dolny (Bottom Sheet) ---
 collapsedContent.addEventListener('click', () => {
     if (currentSelectedToilet) {
         sheet.classList.add('expanded');
@@ -360,7 +393,13 @@ sheetClose.addEventListener('click', () => {
     }
 });
 
-map.on('click', closeBottomSheet);
+// ZMIANA: Kliknięcie w mapę zamyka OBA panele
+map.on('click', () => {
+    closeBottomSheet();
+    closeSidebar();
+});
 
 // === PIERWSZE RENDEROWANIE ===
-renderMarkers();
+// Musimy najpierw ustawić język, aby wypełnić statyczne teksty (np. w sidebarze)
+setLanguage(currentLang);
+// renderMarkers() jest już wywoływane wewnątrz setLanguage()
