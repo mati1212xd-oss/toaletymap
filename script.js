@@ -155,21 +155,13 @@ function renderMarkers() {
     allMarkers.forEach(marker => map.removeLayer(marker));
     allMarkers = [];
 
-    // --- NOWA SEKCJA (Opcje okienka) ---
-    // Ustawiamy opcje programowo, aby zastąpić domyślne zachowanie Leaflet
-    const popupOptions = {
-        maxWidth: 300,  // Maksymalna szerokość w pikselach
-        keepInView: true // Stara się trzymać okienko na ekranie
-    };
-    // --- Koniec nowej sekcji ---
-
     toalety.forEach(toaleta => {
         const nazwa = toaleta.nazwa[currentLang];
         const opis = toaleta.opis[currentLang];
         const navBtnText = translations[currentLang].nav_btn;
         const ratingText = translations[currentLang].rating_prefix;
 
-        const googleMapsUrl = `http://googleusercontent.com/maps/google.com/2{toaleta.lat},${toaleta.lng}`;
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
         
         const popupHTML = `
             <div class="popup-content">
@@ -184,10 +176,10 @@ function renderMarkers() {
             </div>
         `;
 
-        // --- ZMIANA TUTAJ: Dodajemy popupOptions do bindPopup ---
+        // PRZYWRÓCONA WERSJA: .bindPopup(popupHTML) bez dodatkowych opcji
         const marker = L.marker([toaleta.lat, toaleta.lng], {
             icon: getIcon(toaleta.ocena) 
-        }).bindPopup(popupHTML, popupOptions); // <-- DODANE OPCJE
+        }).bindPopup(popupHTML);
 
         marker.toaletaData = toaleta;
 
