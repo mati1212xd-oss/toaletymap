@@ -148,16 +148,12 @@ h1 {
     background-color: #333;
 }
 
-/* --- POPRAWKA DLA MOBILNYCH OKIENEK (Wersja 3) --- */
-
-/* Usuwamy max-width stąd, bo zajmie się tym JS */
+/* --- POPRAWKA DLA MOBILNYCH OKIENEK (Wersja 2) --- */
 .leaflet-popup-content-wrapper {
-    /* max-width: 300px !important; <-- USUNIĘTE */
+    max-width: 300px !important;
 }
-
-/* Ustawiamy stałą max-height (w pikselach) i przewijanie */
 .leaflet-popup-content {
-    max-height: 400px !important; /* Stała wysokość w pikselach */
-    overflow-y: auto !important; /* Przewijanie pionowe */
+    max-height: 50vh !important;
+    overflow-y: auto !important;
     padding-right: 15px !important; 
 }
