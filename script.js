@@ -151,28 +151,25 @@ function getIcon(ocena) {
     });
 }
 
-// === LOGIKA RENDEROWANIA MAPY (Zmieniona dla języków) ===
+// === LOGIKA RENDEROWANIA MAPY ===
 
-// Funkcja która czyści mapę i rysuje pinezki w wybranym języku
 function renderMarkers() {
-    // 1. Usuń istniejące markery z mapy i wyczyść tablicę
     allMarkers.forEach(marker => map.removeLayer(marker));
     allMarkers = [];
 
-    // 2. Stwórz nowe markery
     toalety.forEach(toaleta => {
-        // Wybierz tekst w odpowiednim języku
         const nazwa = toaleta.nazwa[currentLang];
         const opis = toaleta.opis[currentLang];
         const navBtnText = translations[currentLang].nav_btn;
         const ratingText = translations[currentLang].rating_prefix;
 
-        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${toaleta.lat},${toaleta.lng}`;
+        const googleMapsUrl = `http://googleusercontent.com/maps/google.com/2{toaleta.lat},${toaleta.lng}`;
         
+        // Zwróć uwagę na `alt="${nazwa}"` przy obrazku.
         const popupHTML = `
             <div class="popup-content">
                 <h3>${nazwa}</h3>
-                <img src="${toaleta.zdjecie}" alt="${nazwa}">
+                <img src="${toaleta.zdjecie}" alt="Zdjęcie: ${nazwa}">
                 <p>${opis}</p>
                 <a href="${googleMapsUrl}" target="_blank" class="nav-link">${navBtnText}</a>
                 <div class="rating-container" title="${ratingText}: ${toaleta.ocena}/5">
@@ -186,11 +183,34 @@ function renderMarkers() {
             icon: getIcon(toaleta.ocena) 
         }).bindPopup(popupHTML);
 
-        marker.toaletaData = toaleta; // Zachowujemy dane dla filtrów
+        marker.toaletaData = toaleta;
+
+        // --- NOWA SEKCJA (Naprawa ładowania obrazka) ---
+        // Dodajemy "słuchacza" do każdego markera
+        marker.on('popupopen', function(e) {
+            const popup = e.popup;
+            // Dajemy Leaflet chwilę (10ms) na narysowanie okienka
+            setTimeout(() => {
+                // Znajdujemy obrazek wewnątrz okienka
+                const img = popup.getElement()?.querySelector('.popup-content img');
+                if (img) {
+                    // Jeśli obrazek jest już w cache, od razu aktualizuj pozycję
+                    if (img.complete) {
+                        popup.update();
+                    } else {
+                        // Jeśli nie, poczekaj aż się załaduje i WTEDY zaktualizuj pozycję
+                        img.onload = () => {
+                            popup.update();
+                        };
+                    }
+                }
+            }, 10); 
+        });
+        // --- Koniec nowej sekcji ---
+
         allMarkers.push(marker);
     });
 
-    // 3. Zastosuj aktualne filtry do nowo stworzonych markerów
     updateFilters();
 }
 
@@ -199,7 +219,6 @@ function renderMarkers() {
 function setLanguage(lang) {
     currentLang = lang;
     
-    // 1. Zaktualizuj teksty na stronie (HTML)
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (translations[lang][key]) {
@@ -207,10 +226,8 @@ function setLanguage(lang) {
         }
     });
 
-    // 2. Przerysuj mapę z nowym językiem
     renderMarkers();
 
-    // 3. Zmień tekst przycisku
     const btn = document.getElementById('lang-switch');
     if (lang === 'pl') {
         btn.innerText = '🇬🇧 Switch to English';
@@ -219,7 +236,6 @@ function setLanguage(lang) {
     }
 }
 
-// Obsługa przycisku zmiany języka
 document.getElementById('lang-switch').addEventListener('click', () => {
     const newLang = (currentLang === 'pl') ? 'en' : 'pl';
     setLanguage(newLang);
