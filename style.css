@@ -11,7 +11,6 @@ h1 {
 }
 
 #map {
-    /* Zwiększamy wysokość mapy, bo panel będzie na niej */
     height: 80vh; 
     width: 90%;
     margin: 20px auto;
@@ -19,14 +18,9 @@ h1 {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* USUNĘLIŚMY style dla .leaflet-popup-content, 
-   ponieważ dymki nie są już używane. 
-*/
-
 .rating-container {
     display: flex;
     align-items: center;
-    /* margin-top: 8px; <-- usunięte, będzie w panelu */
 }
 .star-rating {
     color: #f5c518;
@@ -119,15 +113,13 @@ h1 {
     overflow: hidden; /* Ważne dla animacji */
 }
 
-/* Stan zwinięty */
 #bottom-sheet.collapsed {
-    height: 25vh; /* Wysokość zwiniętego panelu */
-    overflow: visible; /* Pokaż cień */
+    height: 25vh;
+    overflow: visible;
 }
 
-/* Stan rozwinięty */
 #bottom-sheet.expanded {
-    height: 100vh; /* Wysokość rozwiniętego panelu */
+    height: 100vh;
 }
 
 /* --- Treść zwinięta --- */
@@ -141,7 +133,7 @@ h1 {
     height: 5px;
     background: #ccc;
     border-radius: 3px;
-    margin: 8px auto; /* Centruje uchwyt */
+    margin: 8px auto;
 }
 .collapsed-main {
     display: flex;
@@ -156,18 +148,18 @@ h1 {
     color: #222;
 }
 #sheet-rating {
-    flex-shrink: 0; /* Zapobiega zawijaniu się gwiazdek */
+    flex-shrink: 0;
     margin-left: 10px;
 }
 
 /* --- Treść rozwinięta --- */
 #expanded-content {
-    display: none; /* Domyślnie ukryta */
+    display: none;
     height: 100%;
-    box-sizing: border-box; /* Ważne dla 100% wysokości */
-    overflow-y: auto; /* Przewijana treść */
+    box-sizing: border-box;
+    overflow-y: auto;
     padding: 20px;
-    padding-top: 50px; /* Miejsce na przycisk zamknięcia */
+    padding-top: 50px;
 }
 
 #sheet-close {
@@ -181,22 +173,31 @@ h1 {
     border: none;
     cursor: pointer;
     padding: 0;
+    z-index: 1010; /* Nad treścią */
+}
+
+/* ZMIANA: Styl dla nowego tytułu w rozwiniętym panelu */
+#expanded-sheet-title {
+    text-align: center;
+    margin: 0 0 15px 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #222;
 }
 
 #expanded-content img {
     width: 100%;
-    max-width: 400px; /* Maks. szerokość zdjęcia */
+    max-width: 400px;
     display: block;
     margin: 0 auto 15px auto;
     border-radius: 8px;
-    background-color: #f0f0f0; /* Tło dla placeholderów */
+    background-color: #f0f0f0;
 }
 #expanded-content p {
     font-size: 1.1em;
     line-height: 1.6;
     color: #333;
 }
-/* Używamy tej samej klasy .nav-link co w starych dymkach */
 #expanded-content a.nav-link {
     display: block; 
     margin: 20px auto;
@@ -216,12 +217,9 @@ h1 {
 
 
 /* --- Logika pokazywania/ukrywania stanów --- */
-
-/* Gdy rozwinięty, ukryj treść zwiniętą */
 #bottom-sheet.expanded #collapsed-content {
     display: none;
 }
-/* Gdy rozwinięty, pokaż treść rozwiniętą */
 #bottom-sheet.expanded #expanded-content {
     display: block;
 }
