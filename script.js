@@ -19,8 +19,9 @@ const collapsedContent = document.getElementById('collapsed-content');
 const sheetClose = document.getElementById('sheet-close');
 const sheetTitle = document.getElementById('sheet-title');
 const sheetRating = document.getElementById('sheet-rating');
-// ZMIANA: Dodana referencja do nowego tytułu
 const expandedSheetTitle = document.getElementById('expanded-sheet-title'); 
+// ZMIANA: Dodana referencja do nowej oceny
+const expandedSheetRating = document.getElementById('expanded-sheet-rating');
 const sheetImg = document.getElementById('sheet-img');
 const sheetDesc = document.getElementById('sheet-desc');
 const sheetNav = document.getElementById('sheet-nav');
@@ -193,18 +194,23 @@ function openBottomSheet(toaleta) {
     currentSelectedToilet = toaleta; 
     const lang = currentLang;
 
-    // 1. Wypełnij treść zwiniętą
-    sheetTitle.innerText = toaleta.nazwa[lang];
-    sheetRating.innerHTML = `
+    // Tworzymy kod HTML dla oceny
+    const ratingHTML = `
         <div class="rating-container" title="${translations[lang].rating_prefix}: ${toaleta.ocena}/5">
             <span class="star-rating">${stworzGwiazdki(toaleta.ocena)}</span>
             <span class="rating-text">(${toaleta.ocena}/5)</span>
         </div>
     `;
 
+    // 1. Wypełnij treść zwiniętą
+    sheetTitle.innerText = toaleta.nazwa[lang];
+    sheetRating.innerHTML = ratingHTML; // Wstawiamy HTML oceny
+
     // 2. Wypełnij treść rozwiniętą
-    // ZMIANA: Wypełniamy również nowy tytuł
     expandedSheetTitle.innerText = toaleta.nazwa[lang]; 
+    // ZMIANA: Wstawiamy HTML oceny również tutaj
+    expandedSheetRating.innerHTML = ratingHTML; 
+    
     sheetImg.src = toaleta.zdjecie;
     sheetImg.alt = `${translations[lang].rating_prefix}: ${toaleta.nazwa[lang]}`;
     sheetDesc.innerText = toaleta.opis[lang];
@@ -338,8 +344,6 @@ map.on('locationerror', onLocationError);
 map.locate({ watch: true, setView: false, maxZoom: 17 });
 
 // === NOWE EVENT LISTENERY DLA PANELU ===
-
-// Kliknięcie w zwinięty panel -> rozwija go
 collapsedContent.addEventListener('click', () => {
     if (currentSelectedToilet) {
         sheet.classList.add('expanded');
@@ -347,19 +351,15 @@ collapsedContent.addEventListener('click', () => {
     }
 });
 
-// Kliknięcie przycisku "Zamknij" -> inteligentna obsługa
 sheetClose.addEventListener('click', () => {
     if (sheet.classList.contains('expanded')) {
-        // Jeśli jest 100%, zwiń do 25%
         sheet.classList.remove('expanded');
         sheet.classList.add('collapsed');
     } else if (sheet.classList.contains('collapsed')) {
-        // Jeśli jest 25%, zamknij całkowicie (do 0%)
         closeBottomSheet();
     }
 });
 
-// Kliknięcie w mapę -> zamyka całkowicie
 map.on('click', closeBottomSheet);
 
 // === PIERWSZE RENDEROWANIE ===
