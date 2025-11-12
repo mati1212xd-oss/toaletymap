@@ -16,28 +16,34 @@
     
     <h1 data-i18n="title">Mapa Toalet na WUM</h1>
 
-    <div class="container">
-        <div id="controls">
-            <fieldset id="filters">
-                <legend data-i18n="filter_title">Filtruj wyniki</legend>
-                <label>
-                    <input type="checkbox" id="filter-5star" value="5" class="filter-check"> 
-                    <span data-i18n="filter_best">Tylko najlepsze (5 ★)</span>
-                </label>
-            </fieldset>
+    <div id="sidebar">
+        <button id="sidebar-close">×</button>
+        <h2 data-i18n="menu_title">Menu</h2>
+        
+        <fieldset id="filters">
+            <legend data-i18n="filter_title">Filtruj wyniki</legend>
+            <label>
+                <input type="checkbox" id="filter-5star" value="5" class="filter-check"> 
+                <span data-i18n="filter_best">Tylko najlepsze (5 ★)</span>
+            </label>
+        </fieldset>
 
-            <div id="actions">
-                <button id="lang-switch">🇬🇧 EN / PL</button>
-                <button id="find-nearest" data-i18n="btn_nearest">📍 Znajdź najbliższą</button>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdgj_ZUwihd81LnS1D1vmGvzONcBhxhs6KahY0CLmur25qweQ/viewform?usp=dialog" target="_blank" id="report-new" data-i18n="btn_report">
-                    + Zgłoś nową
-                </a>
-            </div>
+        <div id="actions">
+            <button id="lang-switch">🇬🇧 EN / PL</button>
+            <button id="find-nearest" data-i18n="btn_nearest">📍 Znajdź najbliższą</button>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdgj_ZUwihd81LnS1D1vmGvzONcBhxhs6KahY0CLmur25qweQ/viewform?usp=dialog" target="_blank" id="report-new" data-i18n="btn_report">
+                + Zgłoś nową
+            </a>
         </div>
     </div>
 
-    <div id="map"></div>
+    <div id="map-backdrop"></div>
 
+    <div id="map-container">
+        <button id="menu-toggle">☰</button>
+        <div id="map"></div>
+    </div>
+    
     <div id="bottom-sheet">
         <div id="collapsed-content">
             <div class="handle-bar"></div>
@@ -46,20 +52,16 @@
                 <div id="sheet-rating"></div>
             </div>
         </div>
-
         <button id="sheet-close" aria-label="Zamknij panel">×</button>
-
         <div id="expanded-content">
-            
             <h3 id="expanded-sheet-title"></h3>
-            
             <div id="expanded-sheet-rating"></div>
-            
             <img id="sheet-img" src="" alt="Zdjęcie toalety">
             <p id="sheet-desc"></p>
             <a id="sheet-nav" class="nav-link" href="#" target="_blank"></a>
         </div>
     </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <script src="script.js"></script>
