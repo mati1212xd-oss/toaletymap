@@ -27,7 +27,8 @@
             </fieldset>
 
             <div id="actions">
-                <button id="lang-switch">🇬🇧 EN / PL</button> <button id="find-nearest" data-i18n="btn_nearest">📍 Znajdź najbliższą</button>
+                <button id="lang-switch">🇬🇧 EN / PL</button>
+                <button id="find-nearest" data-i18n="btn_nearest">📍 Znajdź najbliższą</button>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdgj_ZUwihd81LnS1D1vmGvzONcBhxhs6KahY0CLmur25qweQ/viewform?usp=dialog" target="_blank" id="report-new" data-i18n="btn_report">
                     + Zgłoś nową
                 </a>
@@ -37,6 +38,22 @@
 
     <div id="map"></div>
 
+    <div id="bottom-sheet">
+        <div id="collapsed-content">
+            <div class="handle-bar"></div>
+            <div class="collapsed-main">
+                <h3 id="sheet-title"></h3>
+                <div id="sheet-rating"></div>
+            </div>
+        </div>
+
+        <div id="expanded-content">
+            <button id="sheet-close" aria-label="Zamknij panel">×</button>
+            <img id="sheet-img" src="" alt="Zdjęcie toalety">
+            <p id="sheet-desc"></p>
+            <a id="sheet-nav" href="#" target="_blank"></a>
+        </div>
+    </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <script src="script.js"></script>
