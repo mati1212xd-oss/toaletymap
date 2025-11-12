@@ -33,7 +33,7 @@ const sheetImg = document.getElementById('sheet-img');
 const sheetDesc = document.getElementById('sheet-desc');
 const sheetNav = document.getElementById('sheet-nav');
 
-// ZMIANA: Referencje do Sidebar
+// Referencje do Sidebar
 const sidebar = document.getElementById('sidebar');
 const menuToggle = document.getElementById('menu-toggle');
 const sidebarClose = document.getElementById('sidebar-close');
@@ -44,7 +44,7 @@ const mapBackdrop = document.getElementById('map-backdrop');
 const translations = {
     pl: {
         title: "Mapa Toalet na WUM",
-        menu_title: "Menu", // NOWY
+        menu_title: "Menu",
         filter_title: "Filtruj wyniki",
         filter_best: "Tylko najlepsze (5 ★)",
         btn_nearest: "📍 Znajdź najbliższą",
@@ -54,7 +54,7 @@ const translations = {
     },
     en: {
         title: "WUM Toilet Map",
-        menu_title: "Menu", // NOWY
+        menu_title: "Menu",
         filter_title: "Filter results",
         filter_best: "Best rated only (5 ★)",
         btn_nearest: "📍 Find nearest",
@@ -65,7 +65,6 @@ const translations = {
 };
 
 // === BAZA DANYCH TOALET ===
-// (Bez zmian - pominięta dla oszczędności miejsca, jest identyczna jak w poprzedniej odpowiedzi)
 const toalety = [
     {
         lat: 52.2078559642937, lng: 20.985786707695123,
@@ -122,20 +121,22 @@ const toalety = [
         zdjecie: 'images/placeholder.jpg', ocena: 2
     },
     {
+        // --- ZMIANA 1: OKULISTYKA ---
         lat: 52.22506344729113, lng: 20.9983348485012,
         nazwa: { pl: 'Okulistyka', en: 'Ophthalmology' },
         opis: { 
-            pl: 'Totalny PRL, spłukiwanie sznurkiem zwisającym z góry. Jedna w szatni studenckiej w podziemiach...',
-            en: 'Total communist era style, flush with a hanging string. One in the student locker room in the basement...'
+            pl: 'Totalny PRL, spłukiwanie sznurkiem zwisającym z góry. Jedna w szatni studenckiej w podziemiach, druga na wprost od recepcji od wejścia. Jednoosobowe, ta koło recepcji lepsza.',
+            en: 'Total communist era (PRL) style, flush with a hanging string. One in the student locker room in the basement, another one straight ahead from the reception at the entrance. Single-person, the one near the reception is better.'
         },
         zdjecie: 'images/Okulistyka.jpg', ocena: 3
     },
     {
+        // --- ZMIANA 2: SZPITAL WOLSKA ---
         lat: 52.23423239446239, lng: 20.972576939699074,
         nazwa: { pl: 'Szpital Wolska', en: 'Wolska Hospital' },
         opis: { 
-            pl: 'Bardzo fajne toalety na 1 piętrze w budynku gdzie są sale seminaryjne, mało ludzi...',
-            en: 'Very nice toilets on the 1st floor in the seminar rooms building, few people...'
+            pl: 'Bardzo fajne toalety na 1 piętrze w budynku gdzie są sale seminaryjne, mało ludzi.\nFajna toaleta na prawo za szatnią w budynku szpitala',
+            en: 'Very nice toilets on the 1st floor in the seminar rooms building, few people.\nNice toilet to the right, behind the cloakroom in the main hospital building.'
         },
         zdjecie: 'images/placeholder.jpg', ocena: 5
     },
@@ -243,7 +244,7 @@ function closeBottomSheet() {
     sheet.classList.remove('collapsed'); 
 }
 
-// NOWA FUNKCJA: Zamykanie bocznego panelu
+// Funkcja zamykania bocznego panelu
 function closeSidebar() {
     sidebar.classList.remove('open');
     mapBackdrop.classList.remove('open');
@@ -273,11 +274,6 @@ function setLanguage(lang) {
         btn.innerText = '🇵🇱 Zmień na Polski';
     }
 }
-
-document.getElementById('lang-switch').addEventListener('click', () => {
-    const newLang = (currentLang === 'pl') ? 'en' : 'pl';
-    setLanguage(newLang);
-});
 
 // === LOGIKA FILTRÓW ===
 const filterCheckboxes = document.querySelectorAll('.filter-check');
@@ -368,7 +364,7 @@ map.locate({ watch: true, setView: false, maxZoom: 17 });
 
 // --- Panel Boczny (Sidebar) ---
 menuToggle.addEventListener('click', (e) => {
-    e.stopPropagation(); // Zatrzymaj kliknięcie, aby nie poszło do mapy
+    e.stopPropagation(); 
     sidebar.classList.add('open');
     mapBackdrop.classList.add('open');
 });
@@ -393,13 +389,10 @@ sheetClose.addEventListener('click', () => {
     }
 });
 
-// ZMIANA: Kliknięcie w mapę zamyka OBA panele
 map.on('click', () => {
     closeBottomSheet();
     closeSidebar();
 });
 
 // === PIERWSZE RENDEROWANIE ===
-// Musimy najpierw ustawić język, aby wypełnić statyczne teksty (np. w sidebarze)
 setLanguage(currentLang);
-// renderMarkers() jest już wywoływane wewnątrz setLanguage()
