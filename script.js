@@ -11,7 +11,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let allMarkers = []; 
 let userCurrentLocation = null; 
 let currentLang = 'pl';
-let currentSelectedToilet = null; // Śledzi aktywną toaletę
+let currentSelectedToilet = null; 
 
 // === DOM REFERENCJE DO PANELU ===
 const sheet = document.getElementById('bottom-sheet');
@@ -19,6 +19,8 @@ const collapsedContent = document.getElementById('collapsed-content');
 const sheetClose = document.getElementById('sheet-close');
 const sheetTitle = document.getElementById('sheet-title');
 const sheetRating = document.getElementById('sheet-rating');
+// ZMIANA: Dodana referencja do nowego tytułu
+const expandedSheetTitle = document.getElementById('expanded-sheet-title'); 
 const sheetImg = document.getElementById('sheet-img');
 const sheetDesc = document.getElementById('sheet-desc');
 const sheetNav = document.getElementById('sheet-nav');
@@ -191,7 +193,7 @@ function openBottomSheet(toaleta) {
     currentSelectedToilet = toaleta; 
     const lang = currentLang;
 
-    // Wypełnij treść zwiniętą
+    // 1. Wypełnij treść zwiniętą
     sheetTitle.innerText = toaleta.nazwa[lang];
     sheetRating.innerHTML = `
         <div class="rating-container" title="${translations[lang].rating_prefix}: ${toaleta.ocena}/5">
@@ -200,7 +202,9 @@ function openBottomSheet(toaleta) {
         </div>
     `;
 
-    // Wypełnij treść rozwiniętą
+    // 2. Wypełnij treść rozwiniętą
+    // ZMIANA: Wypełniamy również nowy tytuł
+    expandedSheetTitle.innerText = toaleta.nazwa[lang]; 
     sheetImg.src = toaleta.zdjecie;
     sheetImg.alt = `${translations[lang].rating_prefix}: ${toaleta.nazwa[lang]}`;
     sheetDesc.innerText = toaleta.opis[lang];
@@ -343,7 +347,6 @@ collapsedContent.addEventListener('click', () => {
     }
 });
 
-// === ZMIANA JEST TUTAJ ===
 // Kliknięcie przycisku "Zamknij" -> inteligentna obsługa
 sheetClose.addEventListener('click', () => {
     if (sheet.classList.contains('expanded')) {
@@ -355,7 +358,6 @@ sheetClose.addEventListener('click', () => {
         closeBottomSheet();
     }
 });
-// === KONIEC ZMIANY ===
 
 // Kliknięcie w mapę -> zamyka całkowicie
 map.on('click', closeBottomSheet);
