@@ -11,54 +11,22 @@ h1 {
 }
 
 #map {
-    height: 70vh;
+    /* Zwiększamy wysokość mapy, bo panel będzie na niej */
+    height: 80vh; 
     width: 90%;
     margin: 20px auto;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.popup-content {
-    font-size: 14px;
-}
-.popup-content h3 {
-    margin: 0 0 10px 0;
-    text-align: center;
-}
-.popup-content img {
-    width: 100%;
-    max-width: 200px;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-/* Styl przycisku nawigacji w dymku */
-.leaflet-popup-content .nav-link,
-.leaflet-popup-content .nav-link:link,
-.leaflet-popup-content .nav-link:visited {
-    display: block; 
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #0078FF;
-    color: #ffffff !important;
-    text-decoration: none !important;
-    font-weight: 700 !important;
-    border-radius: 5px;
-    text-align: center;
-    transition: background-color 0.2s;
-}
-
-.leaflet-popup-content .nav-link:hover {
-    background-color: #0056b3;
-    color: #ffffff !important;
-}
+/* USUNĘLIŚMY style dla .leaflet-popup-content, 
+   ponieważ dymki nie są już używane. 
+*/
 
 .rating-container {
     display: flex;
     align-items: center;
-    margin-top: 8px;
+    /* margin-top: 8px; <-- usunięte, będzie w panelu */
 }
 .star-rating {
     color: #f5c518;
@@ -112,7 +80,6 @@ h1 {
     margin-top: 10px;
 }
 
-/* Style przycisków akcji */
 #find-nearest, #report-new, #lang-switch {
     display: block;
     padding: 10px 15px;
@@ -127,33 +94,134 @@ h1 {
     transition: background-color 0.2s;
 }
 
-#find-nearest {
-    background-color: #28a745;
-}
-#find-nearest:hover {
-    background-color: #218838;
+#find-nearest { background-color: #28a745; }
+#find-nearest:hover { background-color: #218838; }
+#report-new { background-color: #dc3545; }
+#report-new:hover { background-color: #c82333; }
+#lang-switch { background-color: #555; }
+#lang-switch:hover { background-color: #333; }
+
+
+/* --- PANEL BOTTOM SHEET --- */
+
+#bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0; /* Domyślnie ukryty */
+    background: #ffffff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
+    z-index: 1000; /* Nad mapą */
+    transition: height 0.3s ease-out;
+    overflow: hidden; /* Ważne dla animacji */
 }
 
-#report-new {
-    background-color: #dc3545;
-}
-#report-new:hover {
-    background-color: #c82333;
-}
-
-#lang-switch {
-    background-color: #555; 
-}
-#lang-switch:hover {
-    background-color: #333;
+/* Stan zwinięty */
+#bottom-sheet.collapsed {
+    height: 25vh; /* Wysokość zwiniętego panelu */
+    overflow: visible; /* Pokaż cień */
 }
 
-/* --- POPRAWKA DLA MOBILNYCH OKIENEK (Wersja 2) --- */
-.leaflet-popup-content-wrapper {
-    max-width: 300px !important;
+/* Stan rozwinięty */
+#bottom-sheet.expanded {
+    height: 100vh; /* Wysokość rozwiniętego panelu */
 }
-.leaflet-popup-content {
-    max-height: 50vh !important;
-    overflow-y: auto !important;
-    padding-right: 15px !important; 
+
+/* --- Treść zwinięta --- */
+#collapsed-content {
+    display: block;
+    cursor: pointer;
+    padding: 0 20px;
+}
+.handle-bar {
+    width: 40px;
+    height: 5px;
+    background: #ccc;
+    border-radius: 3px;
+    margin: 8px auto; /* Centruje uchwyt */
+}
+.collapsed-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+#sheet-title {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #222;
+}
+#sheet-rating {
+    flex-shrink: 0; /* Zapobiega zawijaniu się gwiazdek */
+    margin-left: 10px;
+}
+
+/* --- Treść rozwinięta --- */
+#expanded-content {
+    display: none; /* Domyślnie ukryta */
+    height: 100%;
+    box-sizing: border-box; /* Ważne dla 100% wysokości */
+    overflow-y: auto; /* Przewijana treść */
+    padding: 20px;
+    padding-top: 50px; /* Miejsce na przycisk zamknięcia */
+}
+
+#sheet-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2.5em;
+    line-height: 1;
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+#expanded-content img {
+    width: 100%;
+    max-width: 400px; /* Maks. szerokość zdjęcia */
+    display: block;
+    margin: 0 auto 15px auto;
+    border-radius: 8px;
+    background-color: #f0f0f0; /* Tło dla placeholderów */
+}
+#expanded-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #333;
+}
+/* Używamy tej samej klasy .nav-link co w starych dymkach */
+#expanded-content a.nav-link {
+    display: block; 
+    margin: 20px auto;
+    padding: 12px;
+    max-width: 400px;
+    background-color: #0078FF;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.1em;
+}
+#expanded-content a.nav-link:hover {
+    background-color: #0056b3;
+}
+
+
+/* --- Logika pokazywania/ukrywania stanów --- */
+
+/* Gdy rozwinięty, ukryj treść zwiniętą */
+#bottom-sheet.expanded #collapsed-content {
+    display: none;
+}
+/* Gdy rozwinięty, pokaż treść rozwiniętą */
+#bottom-sheet.expanded #expanded-content {
+    display: block;
 }
