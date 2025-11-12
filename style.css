@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    overflow-x: hidden; /* Zapobiega poziomemu przewijaniu */
 }
 
 h1 {
@@ -10,13 +11,21 @@ h1 {
     color: #333;
 }
 
-#map {
-    height: 80vh; 
+/* --- KONTENER MAPY --- */
+#map-container {
+    position: relative; /* Kluczowe dla pozycjonowania przycisku menu */
     width: 90%;
     margin: 20px auto;
+}
+
+#map {
+    height: 80vh; 
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    /* Usunięto width i margin - są teraz w #map-container */
 }
+
+/* Usunięto stare style .container, #controls */
 
 .rating-container {
     display: flex;
@@ -33,98 +42,28 @@ h1 {
     font-weight: bold;
 }
 
-/* --- PANEL STEROWANIA --- */
-.container {
-    width: 90%;
-    margin: 0 auto 15px auto;
-}
-
-#controls {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-#filters {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 0;
-    min-width: 250px;
-}
-#filters legend {
-    font-weight: bold;
-    padding: 0 5px;
-}
-#filters label {
-    display: block;
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-
-#actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-#find-nearest, #report-new, #lang-switch {
-    display: block;
-    padding: 10px 15px;
-    font-size: 1em;
-    font-weight: bold;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.2s;
-}
-
-#find-nearest { background-color: #28a745; }
-#find-nearest:hover { background-color: #218838; }
-#report-new { background-color: #dc3545; }
-#report-new:hover { background-color: #c82333; }
-#lang-switch { background-color: #555; }
-#lang-switch:hover { background-color: #333; }
-
-
-/* --- PANEL BOTTOM SHEET --- */
-
+/* --- PANEL BOTTOM SHEET (bez zmian) --- */
 #bottom-sheet {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 0; /* Domyślnie ukryty */
+    height: 0;
     background: #ffffff;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
-    z-index: 1000; /* Nad mapą */
+    z-index: 1000;
     transition: height 0.3s ease-out;
-    overflow: hidden; /* Ważne dla animacji */
+    overflow: hidden;
 }
-
 #bottom-sheet.collapsed {
     height: 25vh;
     overflow: visible;
 }
-
-/* === ZMIANA JEST TUTAJ === */
 #bottom-sheet.expanded {
-    height: 100svh; /* Używamy Small Viewport Height zamiast 100vh */
+    height: 100svh; /* Używamy svh dla Safari */
 }
-/* === KONIEC ZMIANY === */
-
-/* --- Treść zwinięta --- */
 #collapsed-content {
     display: block;
     cursor: pointer;
@@ -153,17 +92,14 @@ h1 {
     flex-shrink: 0;
     margin-left: 10px;
 }
-
-/* --- Treść rozwinięta --- */
 #expanded-content {
     display: none;
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
     padding: 20px;
-    padding-top: 50px;
+    padding-top: 60px; /* Więcej miejsca na tytuł i X */
 }
-
 #sheet-close {
     position: absolute;
     top: 10px;
@@ -175,9 +111,8 @@ h1 {
     border: none;
     cursor: pointer;
     padding: 0;
-    z-index: 1010; /* Nad treścią */
+    z-index: 1010;
 }
-
 #expanded-sheet-title {
     text-align: center;
     margin: 0 0 10px 0;
@@ -185,13 +120,11 @@ h1 {
     font-weight: bold;
     color: #222;
 }
-
 #expanded-sheet-rating {
     display: flex;
-    justify-content: center; /* Wyśrodkowanie oceny */
-    margin-bottom: 15px; /* Odstęp przed zdjęciem */
+    justify-content: center;
+    margin-bottom: 15px;
 }
-
 #expanded-content img {
     width: 100%;
     max-width: 400px;
@@ -221,12 +154,132 @@ h1 {
 #expanded-content a.nav-link:hover {
     background-color: #0056b3;
 }
-
-
-/* --- Logika pokazywania/ukrywania stanów --- */
 #bottom-sheet.expanded #collapsed-content {
     display: none;
 }
 #bottom-sheet.expanded #expanded-content {
     display: block;
+}
+
+/* --- NOWY PANEL BOCZNY (SIDEBAR) --- */
+
+#menu-toggle {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 800; /* Nad mapą, pod panelem */
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.5em;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+#menu-toggle:hover {
+    background: #f4f4f4;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100svh; /* Używamy svh dla Safari */
+    width: 70%;
+    max-width: 300px; /* Maksymalna szerokość */
+    background: #ffffff;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    z-index: 2000; /* Najwyżej */
+    padding: 20px;
+    padding-top: 60px; /* Miejsce na przycisk X */
+    box-sizing: border-box;
+    overflow-y: auto;
+    
+    /* Domyślnie schowany */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+#sidebar.open {
+    transform: translateX(0);
+}
+
+#sidebar-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2em;
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#sidebar h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Nowe style dla kontrolek w sidebarze */
+#sidebar #filters {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 0 20px 0;
+}
+#sidebar #filters legend {
+    font-weight: bold;
+    padding: 0 5px;
+}
+#sidebar #filters label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+#sidebar #actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#sidebar #find-nearest, #sidebar #report-new, #sidebar #lang-switch {
+    display: block;
+    padding: 10px 15px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+/* --- TŁO MAPY (Backdrop) --- */
+#map-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    z-index: 1500; /* Między mapą a panelem */
+    
+    /* Domyślnie ukryte */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+#map-backdrop.open {
+    opacity: 1;
+    visibility: visible;
 }
