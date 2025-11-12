@@ -1,12 +1,10 @@
 // === INICJALIZACJA MAPY ===
 const mapCenter = [52.213, 20.987]; 
 const initialZoom = 15; 
-// ZMIANA: Wyłączamy domyślny zoom
 const map = L.map('map', {
     zoomControl: false 
 }).setView(mapCenter, initialZoom);
 
-// ZMIANA: Dodajemy zoom w nowym miejscu
 L.control.zoom({
     position: 'bottomright'
 }).addTo(map);
@@ -121,7 +119,6 @@ const toalety = [
         zdjecie: 'images/placeholder.jpg', ocena: 2
     },
     {
-        // --- ZMIANA 1: OKULISTYKA ---
         lat: 52.22506344729113, lng: 20.9983348485012,
         nazwa: { pl: 'Okulistyka', en: 'Ophthalmology' },
         opis: { 
@@ -131,7 +128,6 @@ const toalety = [
         zdjecie: 'images/Okulistyka.jpg', ocena: 3
     },
     {
-        // --- ZMIANA 2: SZPITAL WOLSKA ---
         lat: 52.23423239446239, lng: 20.972576939699074,
         nazwa: { pl: 'Szpital Wolska', en: 'Wolska Hospital' },
         opis: { 
@@ -275,7 +271,16 @@ function setLanguage(lang) {
     }
 }
 
+// --- POPRAWKA: Dodajemy brakujący listener ---
+document.getElementById('lang-switch').addEventListener('click', () => {
+    const newLang = (currentLang === 'pl') ? 'en' : 'pl';
+    setLanguage(newLang);
+});
+// --- KONIEC POPRAWKI ---
+
+
 // === LOGIKA FILTRÓW ===
+// --- POPRAWKA: Dodajemy brakujący listener ---
 const filterCheckboxes = document.querySelectorAll('.filter-check');
 function updateFilters() {
     const filter5star = document.getElementById('filter-5star').checked;
@@ -290,8 +295,11 @@ function updateFilters() {
     });
 }
 filterCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateFilters));
+// --- KONIEC POPRAWKI ---
+
 
 // === ZNAJDŹ NAJBLIŻSZĄ ===
+// --- POPRAWKA: Dodajemy brakujący listener ---
 document.getElementById('find-nearest').addEventListener('click', () => {
     if (!userCurrentLocation) {
         const msg = currentLang === 'pl' 
@@ -325,6 +333,7 @@ document.getElementById('find-nearest').addEventListener('click', () => {
         alert(msg);
     }
 });
+// --- KONIEC POPRAWKI ---
 
 
 // === LOKALIZACJA UŻYTKOWNIKA ===
