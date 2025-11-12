@@ -176,14 +176,21 @@ h1 {
     z-index: 1010; /* Nad treścią */
 }
 
-/* ZMIANA: Styl dla nowego tytułu w rozwiniętym panelu */
 #expanded-sheet-title {
     text-align: center;
-    margin: 0 0 15px 0;
+    margin: 0 0 10px 0; /* Zmniejszony margines dolny */
     font-size: 1.5em;
     font-weight: bold;
     color: #222;
 }
+
+/* ZMIANA: Styl dla oceny w rozwiniętym panelu */
+#expanded-sheet-rating {
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie oceny */
+    margin-bottom: 15px; /* Odstęp przed zdjęciem */
+}
+/* Używamy tych samych stylów .star-rating i .rating-text */
 
 #expanded-content img {
     width: 100%;
