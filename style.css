@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-    overflow-x: hidden; /* Zapobiega poziomemu przewijaniu */
+    overflow-x: hidden;
 }
 
 h1 {
@@ -13,7 +13,7 @@ h1 {
 
 /* --- KONTENER MAPY --- */
 #map-container {
-    position: relative; /* Kluczowe dla pozycjonowania przycisku menu */
+    position: relative;
     width: 90%;
     margin: 20px auto;
 }
@@ -39,7 +39,7 @@ h1 {
     font-weight: bold;
 }
 
-/* --- PANEL BOTTOM SHEET (bez zmian) --- */
+/* --- PANEL BOTTOM SHEET --- */
 #bottom-sheet {
     position: fixed;
     bottom: 0;
@@ -59,25 +59,36 @@ h1 {
     overflow: visible;
 }
 #bottom-sheet.expanded {
-    height: 100svh; /* Używamy svh dla Safari */
+    height: 100svh;
 }
+
+/* --- Treść zwinięta --- */
 #collapsed-content {
     display: block;
     cursor: pointer;
     padding: 0 20px;
 }
-.handle-bar {
-    width: 40px;
-    height: 5px;
-    background: #ccc;
-    border-radius: 3px;
-    margin: 8px auto;
+
+/* ZMIANA: Usunięto .handle-bar, dodano .handle-area */
+.handle-area {
+    padding-top: 8px;
+    text-align: center;
+    color: #888;
+    font-size: 0.9em;
+    font-weight: bold;
 }
+.handle-area .fa {
+    display: block; /* Ikona w osobnej linii */
+    font-size: 1.2em;
+    margin-bottom: 2px;
+}
+/* Koniec zmiany */
+
 .collapsed-main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;
+    padding: 5px 0 10px 0; /* Dodany padding na dole */
 }
 #sheet-title {
     margin: 0;
@@ -89,13 +100,15 @@ h1 {
     flex-shrink: 0;
     margin-left: 10px;
 }
+
+/* --- Treść rozwinięta --- */
 #expanded-content {
     display: none;
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
     padding: 20px;
-    padding-top: 60px; /* Więcej miejsca na tytuł i X */
+    padding-top: 60px;
 }
 #sheet-close {
     position: absolute;
@@ -159,12 +172,11 @@ h1 {
 }
 
 /* --- PANEL BOCZNY (SIDEBAR) --- */
-
 #menu-toggle {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 800; /* Nad mapą, pod panelem */
+    z-index: 800;
     background: white;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -185,26 +197,22 @@ h1 {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100svh; /* Używamy svh dla Safari */
+    height: 100svh;
     width: 70%;
-    max-width: 300px; /* Maksymalna szerokość */
+    max-width: 300px;
     background: #ffffff;
     box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-    z-index: 2000; /* Najwyżej */
-    /* ZMIANA: Zwiększony padding, aby nie było tak ciasno */
-    padding: 25px; 
-    padding-top: 65px; /* Miejsce na przycisk X */
+    z-index: 2000;
+    padding: 25px;
+    padding-top: 65px;
     box-sizing: border-box;
     overflow-y: auto;
-    
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
 }
-
 #sidebar.open {
     transform: translateX(0);
 }
-
 #sidebar-close {
     position: absolute;
     top: 10px;
@@ -215,16 +223,12 @@ h1 {
     border: none;
     cursor: pointer;
 }
-
 #sidebar h2 {
     text-align: center;
-    /* ZMIANA: Dodano margines dolny, aby odsunąć od filtrów */
     margin-top: 0;
-    margin-bottom: 25px; 
+    margin-bottom: 25px;
     color: #333;
 }
-
-/* Nowe style dla kontrolek w sidebarze */
 #sidebar #filters {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -242,52 +246,31 @@ h1 {
     margin-bottom: 5px;
     cursor: pointer;
 }
-
 #sidebar #actions {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
-/* ZMIANY: Kolory i lepsza widoczność dla przycisków w sidebarze */
-#sidebar #lang-switch { 
-    background-color: #555; 
-}
-#sidebar #lang-switch:hover { 
-    background-color: #333; 
-}
-
-#sidebar #find-nearest { 
-    background-color: #28a745; 
-}
-#sidebar #find-nearest:hover { 
-    background-color: #218838; 
-}
-
-#sidebar #report-new { 
-    background-color: #dc3545; 
-    /* Zapewniamy, że zawsze jest widoczny */
-    margin-bottom: 0; 
-}
-#sidebar #report-new:hover { 
-    background-color: #c82333; 
-}
-
+#sidebar #lang-switch { background-color: #555; }
+#sidebar #lang-switch:hover { background-color: #333; }
+#sidebar #find-nearest { background-color: #28a745; }
+#sidebar #find-nearest:hover { background-color: #218838; }
+#sidebar #report-new { background-color: #dc3545; }
+#sidebar #report-new:hover { background-color: #c82333; }
 #sidebar #find-nearest, #sidebar #report-new, #sidebar #lang-switch {
     display: block;
-    padding: 12px 15px; /* Zwiększony padding dla lepszego klikania */
-    font-size: 1.1em; /* Nieco większa czcionka */
+    padding: 12px 15px;
+    font-size: 1.1em;
     font-weight: bold;
     color: #fff;
     border: none;
-    border-radius: 8px; /* Bardziej zaokrąglone rogi */
+    border-radius: 8px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
     transition: background-color 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Delikatny cień */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
 
 /* --- TŁO MAPY (Backdrop) --- */
 #map-backdrop {
@@ -298,13 +281,11 @@ h1 {
     height: 100%;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(3px);
-    z-index: 1500; /* Między mapą a panelem */
-    
+    z-index: 1500;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s, visibility 0.3s;
 }
-
 #map-backdrop.open {
     opacity: 1;
     visibility: visible;
