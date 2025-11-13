@@ -48,7 +48,8 @@ const translations = {
         btn_nearest: "📍 Znajdź najbliższą",
         btn_report: "+ Zgłoś nową",
         nav_btn: "Nawiguj do toalety",
-        rating_prefix: "Ocena"
+        rating_prefix: "Ocena",
+        tap_to_expand: "Dotknij, aby rozwinąć" // NOWY
     },
     en: {
         title: "WUM Toilet Map",
@@ -58,11 +59,13 @@ const translations = {
         btn_nearest: "📍 Find nearest",
         btn_report: "+ Report new",
         nav_btn: "Navigate to toilet",
-        rating_prefix: "Rating"
+        rating_prefix: "Rating",
+        tap_to_expand: "Tap to expand" // NOWY
     }
 };
 
 // === BAZA DANYCH TOALET ===
+// (Bez zmian - skrócona dla przejrzystości)
 const toalety = [
     {
         lat: 52.2078559642937, lng: 20.985786707695123,
@@ -214,14 +217,10 @@ function openBottomSheet(toaleta) {
         </div>
     `;
 
-    // 1. Wypełnij treść zwiniętą
     sheetTitle.innerText = toaleta.nazwa[lang];
     sheetRating.innerHTML = ratingHTML;
-
-    // 2. Wypełnij treść rozwiniętą
     expandedSheetTitle.innerText = toaleta.nazwa[lang]; 
     expandedSheetRating.innerHTML = ratingHTML; 
-    
     sheetImg.src = toaleta.zdjecie;
     sheetImg.alt = `${translations[lang].rating_prefix}: ${toaleta.nazwa[lang]}`;
     sheetDesc.innerText = toaleta.opis[lang];
@@ -240,7 +239,6 @@ function closeBottomSheet() {
     sheet.classList.remove('collapsed'); 
 }
 
-// Funkcja zamykania bocznego panelu
 function closeSidebar() {
     sidebar.classList.remove('open');
     mapBackdrop.classList.remove('open');
@@ -271,16 +269,13 @@ function setLanguage(lang) {
     }
 }
 
-// --- POPRAWKA: Dodajemy brakujący listener ---
 document.getElementById('lang-switch').addEventListener('click', () => {
     const newLang = (currentLang === 'pl') ? 'en' : 'pl';
     setLanguage(newLang);
 });
-// --- KONIEC POPRAWKI ---
 
 
 // === LOGIKA FILTRÓW ===
-// --- POPRAWKA: Dodajemy brakujący listener ---
 const filterCheckboxes = document.querySelectorAll('.filter-check');
 function updateFilters() {
     const filter5star = document.getElementById('filter-5star').checked;
@@ -295,11 +290,9 @@ function updateFilters() {
     });
 }
 filterCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateFilters));
-// --- KONIEC POPRAWKI ---
 
 
 // === ZNAJDŹ NAJBLIŻSZĄ ===
-// --- POPRAWKA: Dodajemy brakujący listener ---
 document.getElementById('find-nearest').addEventListener('click', () => {
     if (!userCurrentLocation) {
         const msg = currentLang === 'pl' 
@@ -325,7 +318,7 @@ document.getElementById('find-nearest').addEventListener('click', () => {
     if (closestMarker) {
         map.setView(closestMarker.getLatLng(), 18);
         openBottomSheet(closestMarker.toaletaData);
-        closeSidebar(); // Zamknij menu po znalezieniu
+        closeSidebar();
     } else {
         const msg = currentLang === 'pl' 
             ? "Brak pasujących toalet na mapie."
@@ -333,7 +326,6 @@ document.getElementById('find-nearest').addEventListener('click', () => {
         alert(msg);
     }
 });
-// --- KONIEC POPRAWKI ---
 
 
 // === LOKALIZACJA UŻYTKOWNIKA ===
@@ -370,8 +362,6 @@ map.on('locationerror', onLocationError);
 map.locate({ watch: true, setView: false, maxZoom: 17 });
 
 // === EVENT LISTENERY DLA PANELI ===
-
-// --- Panel Boczny (Sidebar) ---
 menuToggle.addEventListener('click', (e) => {
     e.stopPropagation(); 
     sidebar.classList.add('open');
@@ -381,7 +371,6 @@ menuToggle.addEventListener('click', (e) => {
 sidebarClose.addEventListener('click', closeSidebar);
 mapBackdrop.addEventListener('click', closeSidebar);
 
-// --- Panel Dolny (Bottom Sheet) ---
 collapsedContent.addEventListener('click', () => {
     if (currentSelectedToilet) {
         sheet.classList.add('expanded');
